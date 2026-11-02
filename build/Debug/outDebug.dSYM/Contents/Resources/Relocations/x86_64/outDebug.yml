@@ -1,5 +1,5 @@
 ---
 triple:          'x86_64-apple-darwin'
-binary-path:     '/Users/dawar/Code/Uni/build/Debug/outDebug'
+binary-path:     '/Users/dawar/Code/BSAI_F26/build/Debug/outDebug'
 relocations:     []
 ...
