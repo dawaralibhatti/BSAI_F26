@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>CRO Notes · Physics</title><style>
+:root{color-scheme:dark;--bg:#160a0d;--bg2:#23121a;--bg3:#311a22;--ln:#4d2a33;--ln2:#6e3d48;--ink:#f8eeee;--mute:#c4a5aa;--acc:#ff5a5f;--teal:#5cc3d1;--gold:#e8b45f;--grn:#7adba0;--tx:var(--ink);--ac:var(--acc);--mut:var(--mute)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:clamp(15px,1.5vw,18px)/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:pan-y;overscroll-behavior:none}
+#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.12;z-index:0;transition:opacity .35s}body.cover-active #bg{opacity:.9}
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--acc);width:0;transition:width .4s;z-index:6}
+.s{position:fixed;inset:0;padding:calc(76px + env(safe-area-inset-top,0px)) 6vw calc(104px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;visibility:hidden;opacity:0;transition:opacity .35s,visibility .35s;overflow-y:auto;overflow-x:hidden;z-index:1}
+.s.on{visibility:visible;opacity:1}
+.in{margin:auto;width:100%;max-width:760px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+h1{font-size:clamp(34px,7vw,76px);line-height:1.08;margin:0 0 .4em}
+h2{font-size:clamp(24px,3.4vw,40px);line-height:1.2;margin:0 0 .6em;width:fit-content;max-width:100%;border-bottom:3px solid var(--acc);padding-bottom:6px}
+h3{color:var(--acc);font-size:1.15em;margin:1.4em 0 .5em}
+.k{color:var(--acc);font-weight:600;letter-spacing:.02em;margin:0 0 .6em}.sub,.hint{color:var(--mute)}.hint{text-align:center;font-size:.9em;margin-top:22px}
+.hero .in{text-align:center}.hero{justify-content:center}
+.tag{display:inline-block;font-size:.8em;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc);border-radius:999px;padding:2px 12px;margin-bottom:10px}
+p{margin:.55em 0}b{color:var(--ink)}sub,sup{line-height:0}
+.card{background:var(--bg2);border:1px solid var(--ln);border-left:4px solid var(--teal);border-radius:12px;padding:12px 18px;margin:14px 0}
+.card.key{border-left-color:var(--gold);background:rgba(232,180,95,.09)}
+table{border-collapse:collapse;width:100%;border:1px solid var(--ln);margin:14px 0}
+th{background:var(--bg3);color:var(--acc);text-align:left;padding:9px 12px}td{padding:8px 12px;vertical-align:top;border-bottom:1px solid var(--ln)}tr:nth-child(even) td{background:rgba(255,255,255,.03)}td:first-child{font-weight:700}
+details{background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:8px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}summary::after{content:"+";color:var(--acc);font-size:1.2em}details[open] summary::after{content:"–"}details[open] summary{color:var(--acc);margin-bottom:4px}details p{color:var(--mute);margin:0 0 6px}
+.f{display:block;background:var(--bg2);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin:14px 0;text-align:center;font:700 clamp(18px,2.4vw,26px)/1.5 ui-monospace,Consolas,monospace;color:var(--teal)}
+svg{max-width:100%}svg text{font:12px system-ui,sans-serif;fill:var(--ink)}.part{cursor:pointer}.part:hover *,.part.sel *{stroke-width:3}
+canvas{display:block;width:100%;border-radius:12px;border:2px solid var(--ln2);background:#0b1d12;touch-action:pan-y}
+label{display:flex;justify-content:space-between;font-size:.9em;color:var(--mute);margin-top:12px}label b{color:var(--teal)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+select,input[type=number]{font:inherit;background:var(--bg2);color:var(--ink);border:1px solid var(--ln2);border-radius:10px;padding:8px;width:100%}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ro{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ro div{background:var(--bg2);border:1px solid var(--ln);border-radius:12px;padding:8px 12px;font-size:.85em;color:var(--mute)}.ro b{display:block;font-size:1.2em;color:var(--gold)}
+.warn{color:var(--gold);min-height:24px;margin-top:8px;font-size:.9em}.res{margin-top:10px;font-weight:600;min-height:24px}
+button.b{background:var(--acc);color:var(--bg);border:0;border-radius:999px;padding:10px 22px;font:700 1em system-ui;cursor:pointer;margin-top:12px}button.g{background:none;color:var(--acc);border:1px solid var(--acc)}
+.a{opacity:0;transform:translateY(22px)}.on .a{animation:up .55s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.07s + .1s)}@keyframes up{to{opacity:1;transform:none}}
+#top{position:fixed;top:calc(4px + env(safe-area-inset-top,0px));left:0;right:0;z-index:5;display:flex;justify-content:center;padding:10px;pointer-events:none}
+#dd{position:relative;width:200px;border:1px solid var(--ln2);border-radius:19px;background:rgba(35,18,26,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);overflow:hidden;pointer-events:auto;transition:width .4s cubic-bezier(.32,.72,0,1),background .3s,box-shadow .3s}
+#dd.open{width:min(340px,92vw);border-radius:22px;background:rgba(35,18,26,.85);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1)}
+#dbtn{width:100%;height:36px;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--acc);font:inherit;font-weight:700;border:0;cursor:pointer;white-space:nowrap}
+#dcnt{color:var(--mute);font-weight:600;font-variant-numeric:tabular-nums;padding-left:8px;border-left:1px solid var(--ln2)}
+#dbtn .ar{transition:transform .4s}#dd.open .ar{transform:rotate(180deg)}
+#dlist{display:flex;flex-direction:column;max-height:0;padding:0 6px;visibility:hidden;transition:max-height .4s cubic-bezier(.32,.72,0,1),padding .4s,visibility 0s .4s}
+#dd.open #dlist{max-height:380px;padding:0 6px 8px;visibility:visible;transition-delay:0s}
+#dlist button{background:none;border:0;color:var(--ink);font:inherit;text-align:left;padding:8px 14px;border-radius:14px;cursor:pointer}#dlist button:hover{background:rgba(255,255,255,.08)}#dlist button.on{color:var(--acc);font-weight:700}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:5;pointer-events:none;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+#ar{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;width:176px;padding:4px;border-radius:999px;background:rgba(35,18,26,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--ln2);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#ar button{background:transparent;color:var(--ink);border:1px solid var(--ln2);border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer}#ar button:hover:not(:disabled){background:var(--acc);color:var(--bg)}#ar button:disabled{opacity:.3;cursor:default}
+#nav{display:none!important}#cnt{color:var(--mute);min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.a{opacity:1;transform:none}.on .a{animation:none}}
+</style></head><body><canvas id="bg" aria-hidden="true"></canvas><div id="bar"></div><div class="s hero" id="cover" data-t="Cover"><div class="in"><h1>Cathode Ray Oscilloscope</h1></div></div><div class="s" id="what" data-t="What is a CRO?"><div class="in">
+
+<h1>Cathode Ray Oscilloscope (CRO)</h1>
+<div class="card key"><p style="margin:0">A CRO is an electronic device that <b>draws a graph of a voltage signal against time</b>. Think of it as a <b>voltmeter that shows a picture</b>.</p></div>
+<h3>Uses of a CRO (tap to open)</h3>
+<details><summary>Circuit troubleshooting</summary><p>See exactly where a signal is missing, weak or distorted in a circuit.</p></details>
+<details><summary>Component testing</summary><p>Check parts like capacitors and transistors by watching how they affect a signal.</p></details>
+<details><summary>Measuring and manipulating AC signals</summary><p>View the wave and stretch, shrink or move it on screen to read it properly.</p></details>
+<details><summary>Voltmeter / amplifier</summary><p>Measures DC and AC voltage, and can magnify very small signals so they are visible.</p></details>
+
+</div></div><div class="s" id="tube" data-t="Inside the tube"><div class="in">
+<h2>Inside the tube</h2>
+<p>Electrons are shot at a screen in a vacuum tube and it glows where they hit. <b>Tap any part</b> to see its job.</p>
+<svg id="tube" viewBox="0 0 640 270" width="100%" role="img" aria-label="Cathode ray tube diagram">
+<polygon points="20,110 360,110 360,85 560,10 560,260 360,185 360,160 20,160" fill="none" stroke="var(--ac)" stroke-width="2.5"/>
+<line x1="75" y1="135" x2="300" y2="135" stroke="#e9b949" stroke-width="3"/>
+<line x1="300" y1="135" x2="560" y2="60" stroke="#e9b949" stroke-width="3"/>
+<g class="part" data-k="cathode"><rect x="40" y="120" width="22" height="30" fill="#f4a261" stroke="var(--tx)" stroke-width="1.5"/><text x="12" y="188">Cathode</text></g>
+<g class="part" data-k="grid"><line x1="90" y1="112" x2="90" y2="158" stroke="var(--tx)" stroke-width="4"/><text x="62" y="98">Grid</text></g>
+<g class="part" data-k="anode"><rect x="130" y="116" width="14" height="38" fill="#b0bec5" stroke="var(--tx)"/><rect x="160" y="116" width="14" height="38" fill="#b0bec5" stroke="var(--tx)"/><text x="115" y="206">Anodes</text></g>
+<g class="part" data-k="y"><rect x="215" y="118" width="60" height="6" fill="#ef4444" stroke="#ef4444"/><rect x="215" y="146" width="60" height="6" fill="#ef4444" stroke="#ef4444"/><text x="212" y="98">Y-plates</text></g>
+<g class="part" data-k="x"><rect x="300" y="108" width="6" height="54" fill="#3b82f6" stroke="#3b82f6"/><rect x="330" y="108" width="6" height="54" fill="#3b82f6" stroke="#3b82f6"/><text x="292" y="206">X-plates</text></g>
+<g class="part" data-k="screen"><rect x="560" y="10" width="14" height="250" fill="#86efac" stroke="#2e8b57" stroke-width="2"/><circle cx="560" cy="60" r="7" fill="#fde047"/><text x="500" y="278">Screen</text></g>
+</svg>
+<div id="info" class="card key"><b>Tap a part</b> above. The beam starts at the cathode on the left and ends on the screen on the right.</div>
+<div class="card"><b>Order the beam travels:</b> cathode → grid → anodes → Y-plates → X-plates → screen</div>
+</div></div><div class="s" id="func" data-t="Functionality"><div class="in">
+<h2>Functionality</h2>
+<div class="card"><b>Vertical axis (y)</b> = potential difference (voltage)<br><b>Horizontal axis (x)</b> = time</div>
+<h3>Why a wave appears</h3>
+<div class="card">The <b>input signal</b> goes to the Y-plates, so the beam moves up and down with the voltage. The <b>time base</b> drags the beam across the screen left to right at constant speed, then snaps it back. Up/down plus left-to-right makes the <b>voltage-time graph</b>.</div>
+<h3>The two knobs that matter</h3>
+<table><tr><th>Knob</th><th>Sets</th><th>Finds</th></tr>
+<tr><td><b>VOLTS/DIV</b></td><td>Volts per vertical square</td><td>Voltage, amplitude, V<sub>pp</sub></td></tr>
+<tr><td><b>TIME/DIV</b></td><td>Time per horizontal square</td><td>Period T, frequency f</td></tr></table>
+<div class="card key" style="margin-top:12px"><b>Key idea:</b> the screen shows <i>divisions</i>, not volts. Real value = <b>divisions × knob setting</b>.</div>
+<h3>Other controls (tap)</h3>
+<details><summary>Brightness / Focus</summary><p>Make the trace brighter or sharper.</p></details>
+<details><summary>Position knobs</summary><p>Slide the trace up/down or left/right.</p></details>
+<details><summary>Trigger</summary><p>Holds the wave still so it does not drift across the screen.</p></details>
+<details><summary>AC / DC / GND switch</summary><p>DC shows the full signal. AC blocks the steady DC part. GND shows the zero line.</p></details>
+</div></div><div class="s" id="live" data-t="Live scope"><div class="in">
+<h2>Live scope</h2>
+<p>Change the signal and the knobs. Watch what the screen shows and what you would read from it.</p>
+<canvas id="c1"></canvas>
+<label>Signal amplitude <b id="vA"></b></label><input id="sA" type="range" min="0.5" max="5" step="0.5" value="1">
+<label>Signal frequency <b id="vF"></b></label><input id="sF" type="range" min="25" max="500" step="25" value="100">
+<div class="row" style="margin-top:12px"><div><label style="margin:0 0 4px">VOLTS/DIV</label><select id="sV"></select></div><div><label style="margin:0 0 4px">TIME/DIV</label><select id="sT"></select></div></div>
+<div class="warn" id="w1"></div>
+<div class="ro"><div>Height peak to peak<b id="r1"></b></div><div>Reading V<sub>pp</sub><b id="r2"></b></div><div>One wave is<b id="r3"></b></div><div>Reading f = 1/T<b id="r4"></b></div></div>
+<p class="hint">Try VOLTS/DIV too small and the wave runs off the screen.</p>
+</div></div><div class="s" id="measure" data-t="Measure it"><div class="in">
+<h2>Measure it yourself</h2>
+<div class="card key"><b>Steps</b><br>1. Count divisions tall, then × VOLTS/DIV = V<sub>pp</sub><br>2. Count divisions for one wave, then × TIME/DIV = T<br>3. f = 1 / T</div>
+<canvas id="c2"></canvas>
+<div class="card" id="set" style="margin-top:10px"></div>
+<div class="row"><div><label style="margin:0 0 4px">V<sub>pp</sub> (V)</label><input id="qa" type="number" inputmode="decimal" step="any"></div><div><label style="margin:0 0 4px">f (Hz)</label><input id="qb" type="number" inputmode="decimal" step="any"></div></div>
+<button class="b" id="chk">Check</button> <button class="b g" id="nxt">New question</button>
+<div class="res" id="res"></div>
+</div></div><div class="s" id="cheat" data-t="Cheat sheet"><div class="in">
+<h2>Cheat sheet</h2>
+<table><tr><th>Quantity</th><th>Formula</th></tr>
+<tr><td>Peak-to-peak voltage</td><td>V<sub>pp</sub> = div<sub>y</sub> × (V/div)</td></tr>
+<tr><td>Amplitude</td><td>V<sub>0</sub> = V<sub>pp</sub> / 2</td></tr>
+<tr><td>Time period</td><td>T = div<sub>x</sub> × (time/div)</td></tr>
+<tr><td>Frequency</td><td>f = 1 / T</td></tr></table>
+<div class="f">f = 1 / T</div>
+<div class="card key"><b>Worked example</b><br>Wave 4 div tall at 0.5 V/div: V<sub>pp</sub> = 2 V, amplitude = 1 V.<br>One wave is 5 div at 2 ms/div: T = 10 ms, f = 1 / 0.01 = <b>100 Hz</b>.</div>
+<div class="card"><b>Remember</b><br>• Y-axis = voltage, X-axis = time<br>• DC = flat line, AC = wave<br>• T in seconds gives f in Hz</div>
+</div></div><div id="top"><div id="dd"><button id="dbtn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-label="Jump to slide"><span id="dlab"></span><span id="dcnt"></span><span class="ar" aria-hidden="true">▾</span></button><div id="dlist" role="listbox"></div></div></div><div id="nav"><div id="ar"><button id="pv" aria-label="Previous slide">‹</button><span id="cnt"></span><button id="nx" aria-label="Next slide">›</button></div></div><script>(function(){
+const $=id=>document.getElementById(id),S=[...document.querySelectorAll(".s")],T=S.map(s=>s.dataset.t),dd=$("dd"),dbtn=$("dbtn"),dl=$("dlist");let i=0;
+S.forEach((s,n)=>{[...s.querySelectorAll(".in>*")].forEach((e,k)=>{e.classList.add("a");e.style.setProperty("--i",k)});const b=document.createElement("button");b.type="button";b.textContent=T[n];b.onclick=()=>{go(n);cl()};dl.appendChild(b)});
+function cl(){dd.classList.remove("open");dbtn.setAttribute("aria-expanded","false")}
+dbtn.onclick=e=>{e.stopPropagation();const o=!dd.classList.contains("open");dd.classList.toggle("open",o);dbtn.setAttribute("aria-expanded",String(o))};
+document.addEventListener("click",e=>{if(!dd.contains(e.target))cl()});
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach((s,k)=>s.classList.toggle("on",k===i));$("dlab").textContent=T[i];$("dcnt").textContent=$("cnt").textContent=(i+1)+" / "+S.length;$("bar").style.width=((i+1)/S.length*100)+"%";document.body.classList.toggle("cover-active",i===0);[...dl.children].forEach((b,k)=>b.classList.toggle("on",k===i));$("pv").disabled=i===0;$("nx").disabled=i===S.length-1;$("nav").classList.toggle("show",!!S[i].querySelector("input[type=range]"));S[i].scrollTop=0;try{history.replaceState(null,"","#"+S[i].id)}catch(e){}}
+$("nx").onclick=()=>go(i+1);$("pv").onclick=()=>go(i-1);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){cl();return}if(e.target.closest("summary,input,select,button"))return;if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();go(i+1)}else if(e.key==="ArrowLeft"||e.key==="PageUp")go(i-1)});
+let tx=0,ty=0,ok=false;document.addEventListener("touchstart",e=>{if(e.touches.length!==1){ok=false;return}const t=e.touches[0];tx=t.clientX;ty=t.clientY;ok=!e.target.closest("#dd,input,select")},{passive:true});document.addEventListener("touchend",e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)go(i+(dx<0?1:-1))},{passive:true});
+function fromHash(){const h=location.hash.slice(1),k=S.findIndex(s=>s.id===h);go(k<0?0:k)}addEventListener("hashchange",fromHash);
+const cv=$("bg"),cx=cv.getContext("2d"),rm=matchMedia("(prefers-reduced-motion:reduce)").matches;let w,h;
+function rs(){w=cv.width=innerWidth;h=cv.height=innerHeight;if(rm)bgd(0)}
+function bgd(t){cx.clearRect(0,0,w,h);cx.strokeStyle="rgba(196,165,170,.12)";cx.lineWidth=1;cx.beginPath();for(let x=0;x<w;x+=48){cx.moveTo(x,0);cx.lineTo(x,h)}for(let y=0;y<h;y+=48){cx.moveTo(0,y);cx.lineTo(w,y)}cx.stroke();
+[["rgba(255,90,95,.8)",1,.00016,1.6],["rgba(92,195,209,.7)",.6,.00011,2.6]].forEach(c=>{cx.strokeStyle=c[0];cx.lineWidth=2.5;cx.beginPath();for(let x=0;x<=w;x+=4){const y=h*.5+Math.sin(x*.012*c[3]+t*c[2]*3)*h*.16*c[1];x?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke()})}
+rs();addEventListener("resize",()=>{rs();draw1();drawQ()});(function tick(t){bgd(t);if(!rm)requestAnimationFrame(tick)})(0);
+/* tube */
+const info={cathode:["Heated cathode","Gets hot and releases electrons."],grid:["Control grid","Lets more or fewer electrons through, so it sets the brightness."],anode:["Anodes","Speed the electrons up and focus them into a thin beam."],y:["Y-plates","Move the beam up and down. The input signal is applied here."],x:["X-plates","Pull the beam left to right at a steady speed. This is the time base."],screen:["Fluorescent screen","Glows at the spot where the beam hits."]};
+document.querySelectorAll(".part").forEach(g=>g.onclick=()=>{document.querySelectorAll(".part").forEach(p=>p.classList.remove("sel"));g.classList.add("sel");const[a,b]=info[g.dataset.k];$("info").innerHTML="<b>"+a+"</b><br>"+b});
+/* scope drawing */
+function scope(cv,A,f,vd,td){const d=devicePixelRatio||1,w=cv.clientWidth,h=Math.round(w*.8);cv.width=w*d;cv.height=h*d;cv.style.height=h+"px";const c=cv.getContext("2d");c.scale(d,d);c.fillStyle="#0b1d12";c.fillRect(0,0,w,h);const sx=w/10,sy=h/8;c.strokeStyle="#2f6b46";c.lineWidth=1;c.beginPath();for(let i=0;i<=10;i++){c.moveTo(i*sx,0);c.lineTo(i*sx,h)}for(let j=0;j<=8;j++){c.moveTo(0,j*sy);c.lineTo(w,j*sy)}c.stroke();c.strokeStyle="#4caf7a";c.lineWidth=2;c.beginPath();c.moveTo(0,h/2);c.lineTo(w,h/2);c.moveTo(w/2,0);c.lineTo(w/2,h);c.stroke();c.save();c.beginPath();c.rect(0,0,w,h);c.clip();c.strokeStyle="#ffd60a";c.lineWidth=3;c.lineJoin="round";c.beginPath();for(let px=0;px<=w;px+=2){const t=px/sx*td,y=h/2-(A*Math.sin(2*Math.PI*f*t)/vd)*sy;px?c.lineTo(px,y):c.moveTo(px,y)}c.stroke();c.restore();c.fillStyle="#9be7b5";c.font="12px sans-serif";c.fillText(vd+" V/div",8,h-8);c.fillText(td*1000+" ms/div",w-82,h-8)}
+const VD=[.2,.5,1,2,5],TD=[.0005,.001,.002,.005,.01,.02];
+VD.forEach(v=>$("sV").add(new Option(v+" V/div",v)));TD.forEach(t=>$("sT").add(new Option(t*1000+" ms/div",t)));$("sV").value=.5;$("sT").value=.002;
+const fx=n=>+n.toPrecision(3);
+function draw1(){const A=+$("sA").value,f=+$("sF").value,vd=+$("sV").value,td=+$("sT").value;$("vA").textContent=A+" V";$("vF").textContent=f+" Hz";scope($("c1"),A,f,vd,td);const h=2*A/vd,p=1/(f*td);$("r1").textContent=fx(h)+" div";$("r2").textContent=fx(h*vd)+" V";$("r3").textContent=fx(p)+" div";$("r4").textContent=fx(1/(p*td))+" Hz";$("w1").textContent=h>8?"Too tall: the wave runs off the screen. Turn VOLTS/DIV up.":p<1?"Too squashed: turn TIME/DIV down to spread it out.":p>10?"Less than one wave fits: turn TIME/DIV up.":h<1?"Too small to read well: turn VOLTS/DIV down.":""}
+["sA","sF","sV","sT"].forEach(i=>$(i).oninput=draw1);
+/* quiz */
+let Q;const pick=a=>a[Math.floor(Math.random()*a.length)];
+function newQ(){Q={vd:pick(VD),td:pick(TD.slice(0,5)),h:pick([2,3,4,5,6]),p:pick([2,2.5,4,5])};Q.V=Q.h*Q.vd;Q.F=1/(Q.p*Q.td);$("set").innerHTML="Settings: <b>"+Q.vd+" V/div</b> and <b>"+Q.td*1000+" ms/div</b>. Count the divisions, then find V<sub>pp</sub> and f.";$("qa").value=$("qb").value="";$("res").textContent="";drawQ()}
+function drawQ(){if(Q)scope($("c2"),Q.V/2,Q.F,Q.vd,Q.td)}
+const near=(a,b)=>Math.abs(a-b)<=.02*b;
+$("chk").onclick=()=>{const a=parseFloat($("qa").value),b=parseFloat($("qb").value),r=$("res");if(isNaN(a)||isNaN(b)){r.style.color="var(--warn)";r.textContent="Enter both answers.";return}const ok1=near(a,Q.V),ok2=near(b,Q.F);r.style.color=ok1&&ok2?"var(--ok)":"var(--bad)";r.textContent=ok1&&ok2?"Correct! V\u209a\u209a = "+fx(Q.V)+" V, f = "+fx(Q.F)+" Hz":"Not yet. "+(ok1?"V\u209a\u209a is right. ":"V\u209a\u209a = "+Q.h+" div × "+Q.vd+" = "+fx(Q.V)+" V. ")+(ok2?"f is right.":"T = "+Q.p+" div × "+Q.td*1000+" ms = "+fx(Q.p*Q.td*1000)+" ms, so f = "+fx(Q.F)+" Hz.")};
+$("nxt").onclick=newQ;
+draw1();newQ();
+
+fromHash();
+})();</script></body></html>

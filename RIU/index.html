@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Study+</title>
+<link rel="icon" type="image/png" href="../favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary-dark:#2d3748;--accent:#f59e0b;--bg:#f7f8fa;--surface:#fff;--text:#1a202c;--muted:#718096;--border:#e2e8f0;--hover:#f3f4f6;--sel:#fef3c7;--shadow-sm:0 2px 8px rgba(0,0,0,.08);--shadow-md:0 6px 16px rgba(0,0,0,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0)}
+nav{background:var(--surface);border-bottom:3px solid var(--primary-dark);height:76px;padding:env(safe-area-inset-top,0) 2rem 0;display:flex;align-items:center;position:sticky;top:0;z-index:10;box-shadow:var(--shadow-sm)}
+.brand{font-family:'Merriweather',serif;font-size:1.5rem;font-weight:700;color:var(--primary-dark);text-decoration:none}
+.brand span{color:var(--accent)}
+main{flex:1;width:100%;display:flex;align-items:center;justify-content:center;padding:28px 16px 40px}
+.win{width:100%;max-width:860px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-md);overflow:hidden}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);background:#fafbfc;flex-wrap:wrap}
+.dots{display:flex;gap:6px}.dots i{width:12px;height:12px;border-radius:50%;background:#e2e8f0}
+.path{flex:1 1 160px;font-size:.9rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:5px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.path b{color:var(--text);font-weight:600}
+.org{margin-left:auto;text-align:right;font-size:.8rem;line-height:1.25;color:var(--muted);flex:none}.org b{display:block;color:var(--text);font-weight:700;font-size:.85rem}
+input{flex:0 1 200px;font:inherit;font-size:.9rem;padding:5px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+input:focus,button:focus-visible,.it:focus-visible{outline:3px solid var(--accent);outline-offset:-2px}
+.ic{font-size:1.3rem;flex:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;padding:16px}
+.it{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:14px 8px;border-radius:10px;text-decoration:none;color:inherit;border:1px solid transparent}
+.it:hover{background:var(--hover)}.it:focus{background:var(--sel);border-color:var(--accent)}
+.it .ic{font-size:2.8rem;line-height:1;margin-bottom:4px}
+.it .n{font-size:.88rem;font-weight:600}
+.it .t{font-size:.75rem;color:var(--muted)}
+.status{padding:8px 16px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border);background:#fafbfc}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+@media(max-width:640px){nav{padding-left:1rem;padding-right:1rem}.dots{display:none}input{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="../index.html">Study<span>+</span></a><div class="org"><b>Riphah International University</b>Student Notes</div></nav>
+<main>
+ <div class="win" id="win">
+  <div class="bar">
+   <div class="dots"><i></i><i></i><i></i></div>
+   <div class="path">Study+ / <b>RIU</b></div>
+   <input id="q" type="search" placeholder="Search" aria-label="Search files">
+  </div>
+  <div class="grid" id="grid"><div class="empty" role="status">Loading Files...</div></div>
+  <div class="status" id="st"></div>
+ </div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+}[c]));
+const isPdf = f => /\.pdf$/i.test(f);
+const name = f => f.replace(/\.[^.]+$/, '').replace(/_+/g, ' ').trim();
+const kind = f => isPdf(f) ? 'PDF notes' : 'Notes';
+const icon = f => isPdf(f) ? '📕' : '📄';
+const href = item => encodeURI(item.p);
+
+let items = [];
+let term = '';
+
+function render() {
+  const query = term.toLowerCase();
+  const list = items
+    .filter(item => name(item.f).toLowerCase().includes(query))
+    .sort((a, b) => {
+      if (isPdf(a.f) !== isPdf(b.f)) return isPdf(a.f) ? 1 : -1;
+      return name(a.f).toLowerCase().localeCompare(name(b.f).toLowerCase());
+    });
+
+  const linkAttrs = item =>
+    `href="${esc(href(item))}"${isPdf(item.f) ? ' target="_blank" rel="noopener noreferrer"' : ''}`;
+
+  $('grid').innerHTML = list.length
+    ? list.map(item => `
+        <a class="it" ${linkAttrs(item)} title="${esc(item.f)}">
+          <span class="ic">${icon(item.f)}</span>
+          <span class="n">${esc(name(item.f))}</span>
+          <span class="t">${kind(item.f)}</span>
+        </a>
+      `).join('')
+    : '<div class="empty">No files found.</div>';
+
+  $('st').textContent = `${list.length} item${list.length === 1 ? '' : 's'}`;
+}
+
+function normalizeFiles(data) {
+  // Accept either ["file.html", ...] or { files: ["file.html", ...] }.
+  const files = Array.isArray(data) ? data : data?.files;
+  if (!Array.isArray(files)) {
+    throw new Error('The PHP response must be a JSON array of file paths.');
+  }
+
+  const seen = new Set();
+  return files
+    .filter(value => typeof value === 'string')
+    .map(value => value.trim().replace(/^\.?\//, ''))
+    .filter(path => {
+      if (!path || !/\.(html?|pdf)$/i.test(path)) return false;
+      if (/^(https?:|\/|\.\.)/i.test(path) || path.split('/').includes('..')) return false;
+      if (/^index\.html?$/i.test(path)) return false;
+      const key = path.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .map(path => ({
+      f: path.split('/').pop(),
+      p: /\.pdf$/i.test(path) && !path.includes('/') ? `PDF/${path}` : path
+    }));
+}
+
+async function loadFiles() {
+  $('grid').innerHTML = '<div class="empty" role="status">Loading Files...</div>';
+  $('st').textContent = '';
+
+  try {
+    const response = await fetch('files.php', {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`PHP returned HTTP ${response.status}`);
+    }
+
+    items = normalizeFiles(await response.json());
+    render();
+
+    if (items.length === 0) {
+      $('grid').innerHTML = '<div class="empty">No files available.</div>';
+      $('st').textContent = '0 items';
+    }
+  } catch (error) {
+    console.error('Unable to load files from files.php:', error);
+    $('grid').innerHTML =
+      '<div class="empty" role="alert">Unable to load files. Please try again later.</div>';
+    $('st').textContent = 'Could not load files';
+  }
+}
+
+$('q').addEventListener('input', event => {
+  term = event.target.value;
+  render();
+});
+
+document.addEventListener('DOMContentLoaded', loadFiles);
+</script>
+</body>
+</html>

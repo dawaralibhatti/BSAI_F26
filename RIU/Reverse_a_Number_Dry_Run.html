@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reverse a Number – Dry Run</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1c2230;--mute:#6b7388;--line:#e2e5ee;--acc:#4f46e5;--hl:#fff3bf;--ok:#16a34a;--code:#f1f3f9;--flash:#c7f9d4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--card:#181c2e;--ink:#e8ebf7;--mute:#9aa3bf;--line:#2a3050;--acc:#8b86ff;--hl:#4a3f10;--ok:#4ade80;--code:#12152a;--flash:#14532d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1220;--card:#181c2e;--ink:#e8ebf7;--mute:#9aa3bf;--line:#2a3050;--acc:#8b86ff;--hl:#4a3f10;--ok:#4ade80;--code:#12152a;--flash:#14532d;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+header{padding:18px 20px 6px;max-width:1200px;margin:auto;text-align:center}
+h1{margin:0;font-size:1.4rem}
+.bar{max-width:1200px;margin:10px auto;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;flex-direction:row-reverse}.bar div{display:flex;gap:8px;flex-wrap:wrap}
+.bar label{font-weight:600;font-size:.9rem}
+input[type=number]{width:130px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:1rem}
+button{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:.92rem;cursor:pointer;font-weight:600}
+button.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+button:disabled{opacity:.45;cursor:default}
+.grid{max-width:1200px;margin:8px auto 30px;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.full{grid-column:1/-1}.card h2{text-align:center;margin:0 0 10px;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+.code{background:var(--code);border-radius:10px;padding:6px 0;font:13.5px/1.7 ui-monospace,Menlo,Consolas,monospace;overflow-x:auto}
+.ln{display:flex;white-space:pre;padding:0 12px;border-left:4px solid transparent}
+.ln i{color:var(--mute);font-style:normal;width:28px;flex:none;user-select:none}
+.ln.on{background:var(--hl);border-left-color:var(--acc)}
+.kw{color:var(--acc);font-weight:600}.st{color:var(--ok)}
+.vars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.v{border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.v b{display:block;font:600 .8rem ui-monospace,Menlo,monospace;color:var(--mute)}
+.v span{display:block;font-size:1.7rem;font-weight:700;transition:background .4s;border-radius:6px}
+.v span.f{background:var(--flash)}
+.say{line-height:1.8;margin-top:12px;padding:12px;border-radius:10px;background:var(--code);border-left:4px solid var(--acc);min-height:70px}
+.say small{display:block;color:var(--mute);margin-bottom:2px}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.9rem}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center}
+th{color:var(--mute);font-weight:600;font-size:.78rem}
+.out{background:#0b0d17;color:#9ef0b0;border-radius:10px;padding:10px 12px;font:14px ui-monospace,Menlo,monospace;min-height:42px}
+.prog{height:6px;background:var(--line);border-radius:4px;margin-bottom:12px;overflow:hidden}
+.prog div{height:100%;width:0;background:var(--acc);transition:width .25s}
+.wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<header>
+<h1>Reverse a Number – Step-by-Step Dry Run</h1>
+</header>
+<div class="bar"><div>
+<button id="prev">← Back</button>
+<button id="next" class="p">Next Step →</button>
+</div><div>
+<button id="auto">▶ Auto Play</button>
+<button id="reset">Reset</button></div>
+</div>
+<div class="grid">
+<section class="card"><h2>Program (C++)</h2><div class="code" id="code"></div></section>
+<section class="card"><h2>Dry Run</h2>
+<div class="prog"><div id="pg"></div></div>
+<div class="vars">
+<div class="v"><b>x</b><span id="vx">–</span></div>
+<div class="v"><b>LastDigit</b><span id="vl">–</span></div>
+<div class="v"><b>Reversed</b><span id="vr">–</span></div>
+</div>
+<div class="say"><small id="stepno"></small><div id="msg"></div></div>
+<div class="wrap"><table><thead><tr><th>Pass</th><th>x before</th><th>LastDigit = x % 10</th><th>Reversed = Reversed×10 + LastDigit</th><th>x after = x / 10</th></tr></thead><tbody id="tb"></tbody></table></div>
+</section>
+<section class="card full"><h2>Output</h2><div class="out" id="out">_</div></section>
+</div>
+<script>
+var X0=1234;
+var LINES=[
+'<span class="kw">#include</span> &lt;iostream&gt;',
+'<span class="kw">using namespace</span> std;',
+'',
+'<span class="kw">int</span> main()',
+'{',
+'    <span class="kw">int</span> x = <span id="xv">1234</span>;',
+'    <span class="kw">int</span> Reversed = 0;',
+'',
+'    <span class="kw">while</span> (x &gt; 0)',
+'    {',
+'        <span class="kw">int</span> LastDigit = x % 10;',
+'        Reversed = (Reversed * 10) + LastDigit;',
+'        x = x / 10;',
+'    }',
+'',
+'    cout &lt;&lt; <span class="st">"Reversed Number: "</span> &lt;&lt; Reversed &lt;&lt; endl;',
+'',
+'    <span class="kw">return</span> 0;',
+'}'];
+var codeEl=document.getElementById('code');
+function drawCode(){codeEl.innerHTML=LINES.map(function(l,i){return '<div class="ln" id="L'+i+'"><i>'+(i+1)+'</i><span>'+l+'</span></div>'}).join('');}
+var steps=[],cur=0,timer=null;
+function build(x){
+  steps=[];var rev=0,last=null,rows=[],n=0,s=function(o){o.rows=rows.map(function(r){return r.slice()});steps.push(o)};
+  var init=x;
+  s({line:5,x:x,last:null,rev:null,msg:'Create the variable <b>x</b>.<br>Store <b>'+x+'</b> in it.<br>This is the number we want to reverse.'});
+  s({line:6,x:x,last:null,rev:0,msg:'Create the variable <b>Reversed</b>.<br>Set it to <b>0</b>.<br>The answer will be built here, one digit at a time.'});
+  while(true){
+    var go=x>0;
+    s({line:8,x:x,last:last,rev:rev,msg:'Check the condition: <b>x &gt; 0</b><br>'+x+' &gt; 0 is <b>'+(go?'TRUE':'FALSE')+'</b><br>'+(go?'So enter the loop.':'So leave the loop.')});
+    if(!go)break;
+    n++;var xb=x;last=x%10;
+    rows.push([n,xb,'','','']);
+    s({line:10,x:x,last:last,rev:rev,msg:'<b>LastDigit = x % 10</b><br>= '+xb+' % 10<br>= <b>'+last+'</b><br>The remainder after dividing by 10 is the last digit.'});
+    var old=rev;rev=rev*10+last;rows[n-1][2]=last;rows[n-1][3]=old+'×10 + '+last+' = '+rev;
+    s({line:11,x:x,last:last,rev:rev,msg:'<b>Reversed = (Reversed × 10) + LastDigit</b><br>= ('+old+' × 10) + '+last+'<br>= <b>'+rev+'</b><br>Multiplying by 10 makes room for the new digit.'});
+    x=Math.floor(x/10);rows[n-1][4]=x;
+    s({line:12,x:x,last:last,rev:rev,msg:'<b>x = x / 10</b><br>= '+xb+' / 10<br>= <b>'+x+'</b><br>Integer division drops the last digit.'});
+  }
+  s({line:15,x:x,last:last,rev:rev,out:'Reversed Number: '+rev,msg:'Print the result on the screen.<br>Output: <b>Reversed Number: '+rev+'</b>'});
+  s({line:17,x:x,last:last,rev:rev,out:'Reversed Number: '+rev,msg:'<b>return 0;</b><br>The program ends successfully. ✅'});
+}
+var prev={};
+function show(){
+  var st=steps[cur];
+  document.querySelectorAll('.ln.on').forEach(function(e){e.classList.remove('on')});
+  var el=document.getElementById('L'+st.line);el.classList.add('on');
+  var vals={vx:st.x,vl:st.last===null?'–':st.last,vr:st.rev===null?'–':st.rev};
+  for(var k in vals){var e=document.getElementById(k);e.textContent=vals[k];if(prev[k]!==undefined&&prev[k]!==vals[k]){e.classList.remove('f');void e.offsetWidth;e.classList.add('f')}prev[k]=vals[k]}
+  document.getElementById('msg').innerHTML=st.msg;
+  document.getElementById('stepno').textContent='Step '+(cur+1)+' of '+steps.length;
+  document.getElementById('pg').style.width=((cur+1)/steps.length*100)+'%';
+  document.getElementById('tb').innerHTML=st.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('');
+  document.getElementById('out').textContent=st.out||'_';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===steps.length-1;
+  if(cur===steps.length-1)stop();
+}
+function stop(){if(timer){clearInterval(timer);timer=null}document.getElementById('auto').textContent='▶ Auto Play'}
+function load(){
+  stop();drawCode();prev={};build(1234);cur=0;show();
+}
+document.getElementById('reset').onclick=load;
+document.getElementById('next').onclick=function(){if(cur<steps.length-1){cur++;show()}};
+document.getElementById('prev').onclick=function(){if(cur>0){cur--;show()}};
+document.getElementById('auto').onclick=function(){
+  if(timer){stop();return}
+  if(cur===steps.length-1){cur=0;show()}
+  this.textContent='⏸ Pause';
+  timer=setInterval(function(){if(cur<steps.length-1){cur++;show()}else stop()},10000);
+};
+load();
+</script>
+</body>
+</html>

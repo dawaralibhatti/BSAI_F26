@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>C++ Practice Quiz</title>
+<style>
+:root{color-scheme:dark;--bg:#0f141c;--bg2:#161e2a;--bg3:#1e2a3b;--ln:#2b3a50;--ln2:#41587a;--ink:#eef4f2;--mute:#9fb2c8;--acc:#4cc9f0;--gold:#ffb454;--red:#ff8a80;--grn:#7adba0}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:clamp(14px,1.5vw,18px)/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.55;z-index:0;pointer-events:none}
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--acc);width:0;transition:width .4s;z-index:6}
+.s{position:fixed;inset:0;padding:12vh 7vw max(11vh,96px);display:flex;flex-direction:column;overflow-y:auto;z-index:1}
+.s.hero{padding-top:max(11vh,56px);padding-bottom:max(11vh,56px)}
+.in{margin:auto;width:100%;max-width:940px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+h1{font-size:clamp(34px,7vw,88px);line-height:1.08;margin:0 0 .4em}
+h2{font-size:clamp(22px,3.4vw,40px);line-height:1.2;margin:0 0 .8em;display:block;width:fit-content;max-width:100%;border-bottom:3px solid var(--acc);padding-bottom:6px}
+h3{color:var(--acc);font-size:1.15em;margin:1.4em 0 .5em}
+.k{color:var(--acc);font-weight:600;margin:0 0 .6em;letter-spacing:.02em}
+.sub{color:var(--mute)}
+p{margin:.55em 0}
+ul,ol{padding-left:1.3em}li{margin:.4em 0}li::marker{color:var(--acc)}
+b{color:var(--ink)}
+.a{opacity:0;transform:translateY(22px);animation:up .55s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.07s + .1s)}
+.na .a{animation:none;opacity:1;transform:none}
+@keyframes up{to{opacity:1;transform:none}}
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;border:1px solid var(--ln)}
+th{background:var(--bg3);color:var(--acc);text-align:left;padding:9px 12px}
+td{padding:8px 12px;vertical-align:top;border-top:1px solid var(--ln)}
+tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+td:first-child{font-weight:600}
+.box,.def,.tip,.warn,.pass,.card{background:var(--bg2);border:1px solid var(--ln);border-left:4px solid var(--acc);border-radius:12px;padding:12px 18px;margin:14px 0}
+.tip{border-left-color:var(--grn);background:rgba(122,219,160,.09)}
+.warn{border-left-color:var(--gold);background:rgba(232,180,95,.09)}
+.def{background:rgba(255,255,255,.04)}
+.pass{border-left-color:var(--gold);line-height:1.75}
+.card{border-left-color:var(--ln2)}
+.mut{color:var(--mute)}
+ol.st{list-style:none;padding:0;counter-reset:s}ol.st li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin:0 0 14px}
+ol.st li:before{content:counter(s);flex:0 0 26px;height:26px;border-radius:50%;background:var(--acc);color:var(--bg);font-weight:700;display:grid;place-items:center;font-size:.85em}
+ol.st li span{flex:1;padding-top:1px}
+input,textarea{width:100%;font:inherit;padding:12px 14px;border-radius:10px;border:1px solid var(--ln2);background:rgba(0,0,0,.25);color:var(--ink)}
+textarea{font:.92em/1.5 ui-monospace,Consolas,Menlo,monospace;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button{font:inherit;cursor:pointer}
+.go{background:var(--acc);color:var(--bg);border:0;border-radius:10px;padding:12px 22px;font-weight:700;margin:12px 10px 0 0}
+.go.o{background:none;color:var(--ink);border:1px solid var(--ln2)}
+.err{color:var(--red);margin:8px 0 0;min-height:1.2em}
+.o{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--bg2);color:var(--ink);border:1.5px solid var(--ln);border-radius:12px;padding:12px 14px;margin:10px 0;transition:border-color .2s,background .2s}
+.o:hover:not(:disabled){border-color:var(--acc)}
+.o b{flex:0 0 28px;height:28px;border-radius:50%;background:var(--bg3);color:var(--acc);display:grid;place-items:center;font-size:.8em}
+.o.ok{border-color:var(--grn);background:rgba(122,219,160,.14)}.o.bad{border-color:var(--red);background:rgba(255,138,128,.13)}
+.fb{border-radius:12px;padding:11px 14px;margin-top:14px;border-left:4px solid}
+.fb.g{background:rgba(122,219,160,.12);border-color:var(--grn)}.fb.r{background:rgba(255,138,128,.12);border-color:var(--red)}.fb.p{background:rgba(232,196,104,.12);border-color:var(--gold)}
+.big{font:700 clamp(44px,9vw,84px)/1 Georgia,serif;color:var(--acc)}
+.tb{display:flex;align-items:center;gap:10px;font-size:.88em;margin:8px 0}.tb span:first-child{flex:0 0 150px}.tb i{flex:1;height:8px;background:var(--ln);border-radius:8px;overflow:hidden}.tb u{display:block;height:100%;background:var(--acc)}
+.lb{width:100%;border:0}.lb th{background:none;color:var(--mute);padding:7px 6px}.lb td{padding:7px 6px}.me td{font-weight:700;color:var(--acc);background:rgba(255,255,255,.05)}
+pre{background:rgba(0,0,0,.4);border:1px solid var(--ln);border-left:4px solid var(--gold);color:#d9efe8;padding:12px 14px;border-radius:10px;overflow-x:auto;margin:10px 0;font:.88em/1.5 ui-monospace,Consolas,Menlo,monospace;white-space:pre-wrap}
+pre.m{border-left-color:var(--grn)}
+#hint{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;background:rgba(0,0,0,.45);border:1px solid var(--ln2);color:var(--mute);font-size:.8em;padding:4px 14px;border-radius:999px;pointer-events:none;white-space:nowrap}
+#hint:empty{display:none}
+#top{position:fixed;top:4px;left:0;right:0;z-index:5;display:flex;justify-content:center;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));pointer-events:none}
+#dd{position:relative;width:168px;border:1px solid var(--ln2);border-radius:19px;background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);overflow:hidden;pointer-events:auto;transition:width .4s cubic-bezier(.32,.72,0,1),background .3s,border-color .3s,box-shadow .3s,border-radius .4s}
+#dd.open{width:min(420px,92vw);border-radius:22px;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25);border-color:rgba(255,255,255,.16);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1)}
+#dbtn{width:100%;height:36px;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--acc);font:inherit;font-weight:700;border:0;white-space:nowrap;padding:0 12px}
+#dlab{overflow:hidden;text-overflow:ellipsis;max-width:150px}
+#dd.open #dlab{max-width:300px}
+#dbtn .ar{display:inline-block;transition:transform .4s cubic-bezier(.32,.72,0,1)}#dd.open #dbtn .ar{transform:rotate(180deg)}
+#dcnt{display:none;color:var(--mute);font-weight:600;font-variant-numeric:tabular-nums;padding-left:8px;border-left:1px solid var(--ln2);line-height:1.1}
+#dbtn:focus-visible,#dlist button:focus-visible,#ar button:focus-visible{outline:2px solid var(--acc);outline-offset:-3px}
+#dlist{display:flex;flex-direction:column;max-height:0;padding:0 6px;overflow-y:auto;visibility:hidden;transition:max-height .4s cubic-bezier(.32,.72,0,1),padding .4s,visibility 0s .4s}
+#dd.open #dlist{max-height:min(62vh,380px);padding:0 6px 8px;visibility:visible;transition-delay:0s}
+#dlist button{background:none;border:0;color:var(--ink);text-align:left;white-space:nowrap;padding:8px 14px;border-radius:14px;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .35s cubic-bezier(.32,.72,0,1),background .15s}
+#dd.open #dlist button{opacity:1;transform:none}
+#dlist button:hover:not(:disabled){background:rgba(255,255,255,.08)}#dlist button.on{color:var(--acc);font-weight:700}#dlist button:disabled{opacity:.35!important;cursor:default}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:5;pointer-events:none;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+#ar{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;width:176px;padding:4px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--ln2);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#ar button{background:transparent;color:var(--ink);border:1px solid var(--ln2);border-radius:50%;width:38px;height:38px;font-size:18px}
+#ar button:hover:not(:disabled){background:var(--acc);color:var(--bg);border-color:var(--acc)}#ar button:disabled{opacity:.3;cursor:default}
+#cnt{color:var(--mute);min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+.hide{display:none!important}
+@media(max-width:760px){
+.s{inset:56px 0 0 0;padding:14px 16px calc(44px + env(safe-area-inset-bottom,0px));-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px);mask-image:linear-gradient(to bottom,transparent 0,#000 14px)}
+.s.hero{inset:0;padding:calc(56px + env(safe-area-inset-top,0px)) 16px calc(56px + env(safe-area-inset-bottom,0px));-webkit-mask-image:none;mask-image:none}
+#nav{display:none!important}#dcnt{display:inline}#hint{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.tb span:first-child{flex-basis:110px}
+}
+@media(prefers-reduced-motion:reduce){.a{opacity:1;transform:none;animation:none}#dd,#dlist,#dlist button,#dbtn .ar{transition-duration:.01s!important;transition-delay:0s!important}}
+
+.s.hero .in{text-align:center}
+#gate .card{max-width:460px;margin:22px auto 0;text-align:left}
+.q-t{margin:0 0 .6em}
+.r .fb{margin-top:14px}
+#gate h1{font-size:clamp(24px,6.3vw,62px)!important;line-height:1.08!important}#gate .k{font-size:clamp(24px,6.3vw,62px)!important;font-family:Georgia,"Times New Roman",serif!important;font-weight:700!important;line-height:1.08!important;letter-spacing:0!important;margin:0 0 .15em!important}
+</style></head><body>
+<canvas id="bg" aria-hidden="true"></canvas><div id="bar"></div>
+<div id="top" class="hide"><div id="dd"><button id="dbtn" type="button" aria-haspopup="listbox" aria-expanded="false"><span id="dlab"></span><span id="dcnt"></span><span class="ar" aria-hidden="true">▾</span></button><div id="dlist" role="listbox"></div></div></div>
+<div id="hint" aria-live="polite"></div>
+<div id="nav" class="hide"><div id="ar"><button id="bk" type="button" aria-label="Previous">‹</button><span id="cnt"></span><button id="nx" type="button" aria-label="Next">›</button></div></div>
+<div class="s hero" id="gate"><div class="in">
+<p class="k a" style="--i:0">C++ Programming</p>
+<h1 class="a" style="--i:1">Practice Quiz</h1>
+<div class="card a" style="--i:2"><input id="nm" placeholder="Full name" autocomplete="name"><div style="height:10px"></div><input id="sp" placeholder="SAP ID" inputmode="numeric" autocomplete="off"><p id="err" class="err"></p><button class="go" id="go">Start quiz →</button></div>
+</div></div>
+<div class="s hide" id="sl"></div>
+<script>
+const R=String.raw,$=id=>document.getElementById(id),KEY='cppquiz_v1';
+const Q=[
+{t:'out',p:'What is the output?',c:R`char ch = 'A';
+ch++;
+cout << ch;`,a:'B'},
+{t:'out',p:'What is the output?',c:R`char ch = 'C';
+ch = ch + 2;
+cout << ch;`,a:'E'},
+{t:'out',p:'What is the output?',c:R`int x = 5;
+cout << x++;
+cout << " " << x;`,a:'5 6'},
+{t:'out',p:'What is the output?',c:R`int x = 4;
+cout << ++x;
+cout << " " << x;`,a:'5 5'},
+{t:'out',p:'What is the output? (Write the numbers in order.)',c:R`for(int i = 1; i <= 2; i++)
+{
+    for(int j = 1; j <= 3; j++)
+        cout << i * j << "\t";
+    cout << endl;
+}`,a:'1 2 3 2 4 6'},
+{t:'out',p:'What is the full output? (Both lines.)',c:R`int num1 = 6, num2 = 5;
+if(num1++ == 6 && ++num2 == 6)
+    cout << "Both True";
+else
+    cout << "Else";
+cout << "\n" << num1 << " " << num2;`,a:'Both True 7 6'},
+{t:'out',p:'What is the output?',c:R`int choice = 1;
+switch(choice)
+{
+    case 1: cout << "A";
+    case 2: cout << "B"; break;
+    default: cout << "C";
+}`,a:'AB'},
+{t:'out',p:'What is the output?',c:R`cout << setfill('*') << setw(8) << "Ali";`,a:'*****Ali'},
+{t:'out',p:'What is the output?',c:R`int n = 17;
+cout << n / 5 << " " << n % 5;`,a:'3 2'},
+
+{t:'fix',p:'This should print "Even" for even numbers. Rewrite the code correctly.',c:R`int number = 10;
+if(number / 2 == 0)
+    cout << "Even";
+else
+    cout << "Odd";`,k:[/number%2==0/],m:R`if(number % 2 == 0)`},
+{t:'fix',p:'Rewrite correctly.',c:R`int option = 2;
+switch option
+{
+    case 1: cout << "One";
+    case 2: cout << "Two";
+    default: cout << "Invalid";
+}`,k:[/switch\(option\)/,/break;/],m:R`switch (option) { case 1: cout << "One"; break; case 2: cout << "Two"; break; default: cout << "Invalid"; }`},
+{t:'fix',p:'Rewrite correctly.',c:R`int x = 5
+cout << x;`,k:[/intx=5;/,/cout<<x;/],m:R`int x = 5;  (missing semicolon)`},
+{t:'fix',p:'This should CHECK if age is 18. Rewrite correctly.',c:R`int age = 20;
+if(age = 18)
+    cout << "Eighteen";`,k:[/age==18/],m:R`if(age == 18)  (== compares, = assigns)`},
+{t:'fix',p:'Rewrite correctly.',c:R`int i = 0;
+do {
+    cout << i;
+    i++;
+} while(i < 5)`,k:[/while\(i<5\);/],m:R`} while(i < 5);  (do-while needs a semicolon)`},
+
+{t:'code',p:'Write a program that takes n from the user and prints the sum of the first n even numbers.',k:[/cin>>/,/for\(|while\(/,/sum(\+=|=sum\+)/,/cout<</],m:R`int n, sum = 0;
+cin >> n;
+for(int i = 1; i <= n; i++)
+    sum = sum + 2 * i;
+cout << sum;`},
+{t:'code',p:'Write a program that reads a number and prints whether it is even or odd using if-else.',k:[/cin>>/,/%2==0/,/if\(/,/else/,/cout<</],m:R`int n; cin >> n;
+if(n % 2 == 0) cout << "Even";
+else cout << "Odd";`},
+{t:'code',p:'Write a do-while loop that keeps asking "Enter 0 to exit" until the user enters 0.',k:[/do\{/,/\}while\(/,/cin>>/,/!=0/,/cout<</],m:R`int x;
+do {
+    cout << "Enter 0 to exit: ";
+    cin >> x;
+} while(x != 0);`},
+
+{t:'def',p:'Define an algorithm and explain why it is important.',k:[/step/,/finite|set of|sequence/,/problem|task/,/instruction/,/input|output|error|organi|language/],m:'An algorithm is a finite, step-by-step set of clear instructions used to solve a problem or perform a task. It makes problem solving systematic, reduces errors, and is independent of any programming language.'},
+{t:'def',p:'Define a flowchart and give one advantage.',k:[/visual|diagram|graphic/,/algorithm/,/symbol/,/arrow|flow ?line|connect/,/explain|clear|plan|error|document/],m:'A flowchart is a visual representation of an algorithm that uses standard symbols connected by arrows. It makes algorithms easier to explain, plan and debug.'},
+{t:'def',p:'What are C++ manipulators? Name two and what they do.',k:[/function|special/,/output|format|display|look/,/setw|setfill|setprecision|endl|fixed/,/iomanip/],m:'Manipulators are special functions that change how output looks, used with cout. Examples: setw(n) sets the width, setfill(ch) fills empty space, setprecision(n) with fixed sets decimal places. All except endl need <iomanip>.'},
+{t:'def',p:'What is a switch statement? When do break and default matter?',k:[/multiple|many|several|choices|cases|options/,/break/,/default/,/value|variable|expression|compare|match/],m:'A switch statement chooses one of many cases by comparing a variable or expression with case values. break stops execution falling into the next case; default runs when no case matches.'},
+{t:'def',p:'Explain the difference between ++x and x++.',k:[/pre|before|first/,/post|after/,/increment|increase|add|\+1|plus/],m:'++x (pre-increment) increases x first and then uses the new value. x++ (post-increment) uses the current value first and then increases x.'}
+];
+
+const H={out:'Part 1: Predict the output',fix:'Part 2: Find the error',code:'Part 3: Write the code',def:'Part 4: Definitions'};
+const PT=['out','fix','code','def'];
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
+const save=a=>{try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}};
+let user=null,t0=0,idx=0,max=0,rec={},done=false;
+const END=Q.length,sl=$('sl'),dd=$('dd'),dbtn=$('dbtn'),dl=$('dlist');
+
+function grade(q,v){
+ if(q.t=='out')return v.trim().replace(/\s+/g,' ')==q.a?1:0;
+ const s=q.t=='def'?v.toLowerCase():v.replace(/\s+/g,'').toLowerCase();
+ const h=q.k.filter(r=>r.test(s)).length;
+ return q.t=='fix'?(h==q.k.length?1:0):h/q.k.length;
+}
+const total=()=>Object.values(rec).reduce((a,r)=>a+r.g,0);
+const API='scores.php';
+const JH={'Content-Type':'application/json'};
+const pctOf=r=>r.pct!=null?r.pct:Math.round(r.score/r.max*100);
+function rowsHtml(rows){
+ rows=rows.slice().sort((a,b)=>b.score-a.score||a.secs-b.secs).slice(0,15);
+ return rows.length?'<table class="lb"><tr><th>#</th><th>Name</th><th>SAP ID</th><th>Best</th><th>Time</th></tr>'+rows.map((r,i)=>`<tr class="${user&&user.sap==r.sap?'me':''}"><td>${i+1}</td><td>${esc(r.name)}</td><td>${esc(r.sap)}</td><td>${pctOf(r)}%</td><td>${Math.floor(r.secs/60)}m ${r.secs%60}s</td></tr>`).join('')+'</table>':'<p class="mut">No attempts yet. Be the first on the board.</p>';
+}
+function localBoard(){const best={};load().forEach(r=>{const b=best[r.sap];if(!b||r.score>b.score||(r.score==b.score&&r.secs<b.secs))best[r.sap]=r});return Object.values(best)}
+async function getBoard(){const r=await fetch(API+'?quiz=cpp',{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();if(!Array.isArray(j))throw 0;return j}
+async function postScore(rec){const r=await fetch(API,{method:'POST',headers:JH,body:JSON.stringify({quiz:'cpp',name:rec.name,sap:rec.sap,score:rec.score,max:rec.max,secs:rec.secs})});if(!r.ok)throw 0;const j=await r.json();if(!Array.isArray(j))throw 0;return j}
+let boardP=null;
+async function refreshBoard(){
+ const el=$('lbbox');if(!el)return;el.innerHTML='<p class="mut">Loading…</p>';
+ let rows=null;try{rows=await(boardP||getBoard())}catch(e){try{rows=await getBoard()}catch(e2){}}
+ boardP=null;if(!$('lbbox'))return;
+ $('lbbox').innerHTML=rows?rowsHtml(rows):rowsHtml(localBoard())+'<p class="mut">Couldn’t reach the shared board, so only scores from this device are shown.</p>';
+}
+/* part jump list */
+const M=PT.map(t=>({n:H[t],i:Q.findIndex(q=>q.t==t)}));M.push({n:'🏆 Results',i:END});
+M.forEach((m,k)=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','option');b.textContent=m.n;b.onclick=()=>{jump(m.i);cl()};dl.appendChild(b)});
+function cl(){dd.classList.remove('open');dbtn.setAttribute('aria-expanded','false')}
+dbtn.onclick=e=>{e.stopPropagation();const o=!dd.classList.contains('open');dd.classList.toggle('open',o);dbtn.setAttribute('aria-expanded',String(o))};
+document.addEventListener('click',e=>{if(!dd.contains(e.target))cl()});
+
+function chrome(label){
+ $('dlab').textContent=label;const c=`${Math.min(idx+1,END)} / ${END}`;$('dcnt').textContent=c;$('cnt').textContent=c;
+ $('bar').style.width=((idx<END?idx+(rec[idx]?1:0):END)/END*100)+'%';
+ let cur=0;M.forEach((m,k)=>{if(idx>=m.i)cur=k});
+ [].forEach.call(dl.children,(b,k)=>{b.classList.toggle('on',k===cur);b.disabled=M[k].i>max||(k==M.length-1&&!done)});
+ $('bk').disabled=idx==0;$('nx').disabled=idx>=max||idx>=END;
+}
+function fbHtml(q,r){
+ const g=r.g,cls=g>=1?'g':g>0?'p':'r',lab=g>=1?'Correct':g>0?'Partly correct':'Incorrect';
+ return `<div class="r"><div class="fb ${cls}"><b>${lab} (${+g.toFixed(2)}/1)</b></div><p class="mut" style="margin-bottom:0">Model answer:</p><pre class="m">${esc(q.t=='out'?q.a:q.m)}</pre></div>`;
+}
+function show(anim=true){
+ if(idx>=END)return result(anim);
+ const q=Q[idx],r=rec[idx],first=idx==0||Q[idx-1].t!=q.t;
+ sl.innerHTML=`<div class="in"><p class="k">${H[q.t]} · Question ${idx+1} of ${END}</p><h2 class="q-t">${esc(q.p)}</h2>${q.c?`<pre>${esc(q.c)}</pre>`:''}<textarea rows="${q.t=='out'?2:q.t=='def'?4:7}" spellcheck="false" aria-label="Your answer" ${r?'disabled':''}>${r?esc(r.v):''}</textarea>${r?fbHtml(q,r):''}<button class="go" id="sub">${r?(idx==END-1?'Finish quiz':'Next question →'):'Check answer'}</button></div>`;
+ fin(anim);chrome(H[q.t].split(':')[0]);
+ $('hint').textContent='';
+ if(anim&&!r){const ta=sl.querySelector('textarea');if(ta&&matchMedia('(hover:hover)').matches)ta.focus()}
+ $('sub').onclick=submit;
+}
+function fin(anim){
+ [].forEach.call(sl.firstChild.children,(e,k)=>{e.classList.add('a');e.style.setProperty('--i',k)});
+ sl.classList.toggle('na',!anim);sl.classList.remove('hide');if(anim)sl.scrollTop=0;
+}
+function submit(){
+ const q=Q[idx];
+ if(!rec[idx]){
+  const v=sl.querySelector('textarea').value,g=grade(q,v);
+  rec[idx]={v,g};max=Math.max(max,idx);show(false);sl.scrollTop=sl.scrollHeight;
+  if(idx<END)$('nx').disabled=true;
+ }else if(idx==END-1)finish();
+ else go(1);
+}
+function go(d){const n=idx+d;if(n<0||n>END||n>max+((rec[idx]&&d>0&&idx==max)?1:0))return;if(d>0&&!rec[idx]&&idx<END)return;idx=n;max=Math.max(max,idx);show()}
+function jump(i){if(i<0||i>max||i==idx)return;idx=i;show()}
+function finish(){
+ const tot=total(),pct=Math.round(tot/END*100),secs=Math.round((Date.now()-t0)/1000),a=load();
+ if(!done){const rec={name:user.name,sap:user.sap,score:+tot.toFixed(2),max:END,pct,secs,date:new Date().toISOString()};a.push(rec);save(a);done=true;boardP=postScore(rec)}
+ idx=END;max=END;show();
+}
+function result(anim){
+ const tot=total(),pct=Math.round(tot/END*100);
+ sl.innerHTML=`<div class="in"><p class="k">Finished</p><div class="card" style="text-align:center"><div class="big">${pct}%</div><p style="margin:8px 0 0">${esc(user.name)}, you scored ${+tot.toFixed(1)} out of ${END}.</p></div><div class="card"><b>By part</b>${PT.map(t=>{let s=0,n=0;Q.forEach((q,j)=>{if(q.t==t){n++;s+=rec[j]?rec[j].g:0}});return `<div class="tb"><span>${H[t].split(': ')[1]}</span><i><u style="width:${s/n*100}%"></u></i><span style="flex:0 0 40px">${+s.toFixed(1)}/${n}</span></div>`}).join('')}</div><div class="card"><b>🏆 Leaderboard</b><div id="lbbox" style="margin-top:6px"></div></div><button class="go" id="again">Back to start</button></div>`;
+ fin(anim);chrome('🏆 Results');$('hint').textContent='';refreshBoard();
+ $('again').onclick=()=>{sl.classList.add('hide');$('top').classList.add('hide');$('nav').classList.add('hide');$('hint').textContent='';$('bar').style.width='0';$('gate').classList.remove('hide');cl()};
+}
+$('go').onclick=start;[$('nm'),$('sp')].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')start()}));
+function start(){
+ const name=$('nm').value.trim(),sap=$('sp').value.trim();
+ if(!name||!sap){$('err').textContent='Enter both your name and your SAP ID to start.';return}
+ user={name,sap};idx=0;max=0;rec={};done=false;t0=Date.now();$('err').textContent='';
+ $('gate').classList.add('hide');$('top').classList.remove('hide');$('nav').classList.remove('hide');show();
+}
+$('nx').onclick=()=>go(1);$('bk').onclick=()=>go(-1);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cl()});
+let x0=null,y0=0,sk=true;document.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY;sk=!!(e.touches.length>1||e.target.closest('#dd,.tw,input,textarea,pre'))},{passive:true});
+document.addEventListener('touchend',e=>{if(x0==null||sk||sl.classList.contains('hide'))return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5){cl();if(dx<0){if(rec[idx]&&idx<max)go(1)}else go(-1)}},{passive:true});
+
+(function(){const c=document.getElementById('bg'),x=c.getContext('2d'),G=["{","}","()",";","#","++","<<","&&","[]","=","int","cout"],P=[];let W,H,D=Math.min(devicePixelRatio||1,2);
+function rs(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0)}
+rs();addEventListener('resize',rs);
+const n=Math.round(Math.min(34,Math.max(16,W*H/38000)));
+for(let i=0;i<n;i++)P.push({g:G[i%G.length],x:Math.random()*W,y:Math.random()*H,s:16+Math.random()*34,v:.12+Math.random()*.3,r:Math.random()*6.28,w:(Math.random()-.5)*.004,a:.08+Math.random()*.16});
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function draw(){x.clearRect(0,0,W,H);for(const p of P){x.save();x.translate(p.x,p.y);x.rotate(p.r);x.globalAlpha=p.a;x.fillStyle='#4cc9f0';x.font=p.s+'px Georgia,serif';x.fillText(p.g,0,0);x.restore();if(!still){p.y-=p.v;p.r+=p.w;if(p.y<-60){p.y=H+60;p.x=Math.random()*W}}}
+if(!still)requestAnimationFrame(draw)}
+draw()})();
+
+</script></body></html>
