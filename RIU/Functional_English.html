@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Functional English Study Guide</title>
+<style>
+:root{color-scheme:dark;--bg:#0c1f17;--bg2:#14291f;--bg3:#1c3628;--ln:#2c4d3b;--ln2:#437257;--ink:#eef4f2;--mute:#a5c4b4;--acc:#5fd39b;--gold:#e8c468;--red:#ff8a80;--grn:#7adba0}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:clamp(14px,1.5vw,18px)/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.55;z-index:0;pointer-events:none}
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--acc);width:0;transition:width .4s;z-index:6}
+.s{position:fixed;inset:0;padding:12vh 7vw max(11vh,96px);display:flex;flex-direction:column;overflow-y:auto;z-index:1}
+.s.hero{padding-top:max(11vh,56px);padding-bottom:max(11vh,56px)}
+.in{margin:auto;width:100%;max-width:940px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+h1{font-size:clamp(34px,7vw,88px);line-height:1.08;margin:0 0 .4em}
+h2{font-size:clamp(22px,3.4vw,40px);line-height:1.2;margin:0 0 .8em;display:block;width:fit-content;max-width:100%;border-bottom:3px solid var(--acc);padding-bottom:6px}
+h3{color:var(--acc);font-size:1.15em;margin:1.4em 0 .5em}
+.k{color:var(--acc);font-weight:600;margin:0 0 .6em;letter-spacing:.02em}
+.sub{color:var(--mute)}
+p{margin:.55em 0}
+ul,ol{padding-left:1.3em}li{margin:.4em 0}li::marker{color:var(--acc)}
+b{color:var(--ink)}
+.a{opacity:0;transform:translateY(22px);animation:up .55s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.07s + .1s)}
+.na .a{animation:none;opacity:1;transform:none}
+@keyframes up{to{opacity:1;transform:none}}
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;border:1px solid var(--ln)}
+th{background:var(--bg3);color:var(--acc);text-align:left;padding:9px 12px}
+td{padding:8px 12px;vertical-align:top;border-top:1px solid var(--ln)}
+tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+td:first-child{font-weight:600}
+.box,.def,.tip,.warn,.pass,.card{background:var(--bg2);border:1px solid var(--ln);border-left:4px solid var(--acc);border-radius:12px;padding:12px 18px;margin:14px 0}
+.tip{border-left-color:var(--grn);background:rgba(122,219,160,.09)}
+.warn{border-left-color:var(--gold);background:rgba(232,180,95,.09)}
+.def{background:rgba(255,255,255,.04)}
+.pass{border-left-color:var(--gold);line-height:1.75}
+.card{border-left-color:var(--ln2)}
+.mut{color:var(--mute)}
+ol.st{list-style:none;padding:0;counter-reset:s}ol.st li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin:0 0 14px}
+ol.st li:before{content:counter(s);flex:0 0 26px;height:26px;border-radius:50%;background:var(--acc);color:var(--bg);font-weight:700;display:grid;place-items:center;font-size:.85em}
+ol.st li span{flex:1;padding-top:1px}
+input,textarea{width:100%;font:inherit;padding:12px 14px;border-radius:10px;border:1px solid var(--ln2);background:rgba(0,0,0,.25);color:var(--ink)}
+textarea{font:.92em/1.5 ui-monospace,Consolas,Menlo,monospace;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button{font:inherit;cursor:pointer}
+.go{background:var(--acc);color:var(--bg);border:0;border-radius:10px;padding:12px 22px;font-weight:700;margin:12px 10px 0 0}
+.go.o{background:none;color:var(--ink);border:1px solid var(--ln2)}
+.err{color:var(--red);margin:8px 0 0;min-height:1.2em}
+.o{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--bg2);color:var(--ink);border:1.5px solid var(--ln);border-radius:12px;padding:12px 14px;margin:10px 0;transition:border-color .2s,background .2s}
+.o:hover:not(:disabled){border-color:var(--acc)}
+.o b{flex:0 0 28px;height:28px;border-radius:50%;background:var(--bg3);color:var(--acc);display:grid;place-items:center;font-size:.8em}
+.o.ok{border-color:var(--grn);background:rgba(122,219,160,.14)}.o.bad{border-color:var(--red);background:rgba(255,138,128,.13)}
+.fb{border-radius:12px;padding:11px 14px;margin-top:14px;border-left:4px solid}
+.fb.g{background:rgba(122,219,160,.12);border-color:var(--grn)}.fb.r{background:rgba(255,138,128,.12);border-color:var(--red)}.fb.p{background:rgba(232,196,104,.12);border-color:var(--gold)}
+.big{font:700 clamp(44px,9vw,84px)/1 Georgia,serif;color:var(--acc)}
+.tb{display:flex;align-items:center;gap:10px;font-size:.88em;margin:8px 0}.tb span:first-child{flex:0 0 150px}.tb i{flex:1;height:8px;background:var(--ln);border-radius:8px;overflow:hidden}.tb u{display:block;height:100%;background:var(--acc)}
+.lb{width:100%;border:0}.lb th{background:none;color:var(--mute);padding:7px 6px}.lb td{padding:7px 6px}.me td{font-weight:700;color:var(--acc);background:rgba(255,255,255,.05)}
+pre{background:rgba(0,0,0,.4);border:1px solid var(--ln);border-left:4px solid var(--gold);color:#d9efe8;padding:12px 14px;border-radius:10px;overflow-x:auto;margin:10px 0;font:.88em/1.5 ui-monospace,Consolas,Menlo,monospace;white-space:pre-wrap}
+pre.m{border-left-color:var(--grn)}
+#hint{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;background:rgba(0,0,0,.45);border:1px solid var(--ln2);color:var(--mute);font-size:.8em;padding:4px 14px;border-radius:999px;pointer-events:none;white-space:nowrap}
+#hint:empty{display:none}
+#top{position:fixed;top:4px;left:0;right:0;z-index:5;display:flex;justify-content:center;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));pointer-events:none}
+#dd{position:relative;width:168px;border:1px solid var(--ln2);border-radius:19px;background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);overflow:hidden;pointer-events:auto;transition:width .4s cubic-bezier(.32,.72,0,1),background .3s,border-color .3s,box-shadow .3s,border-radius .4s}
+#dd.open{width:min(420px,92vw);border-radius:22px;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25);border-color:rgba(255,255,255,.16);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1)}
+#dbtn{width:100%;height:36px;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--acc);font:inherit;font-weight:700;border:0;white-space:nowrap;padding:0 12px}
+#dlab{overflow:hidden;text-overflow:ellipsis;max-width:150px}
+#dd.open #dlab{max-width:300px}
+#dbtn .ar{display:inline-block;transition:transform .4s cubic-bezier(.32,.72,0,1)}#dd.open #dbtn .ar{transform:rotate(180deg)}
+#dcnt{display:none;color:var(--mute);font-weight:600;font-variant-numeric:tabular-nums;padding-left:8px;border-left:1px solid var(--ln2);line-height:1.1}
+#dbtn:focus-visible,#dlist button:focus-visible,#ar button:focus-visible{outline:2px solid var(--acc);outline-offset:-3px}
+#dlist{display:flex;flex-direction:column;max-height:0;padding:0 6px;overflow-y:auto;visibility:hidden;transition:max-height .4s cubic-bezier(.32,.72,0,1),padding .4s,visibility 0s .4s}
+#dd.open #dlist{max-height:min(62vh,380px);padding:0 6px 8px;visibility:visible;transition-delay:0s}
+#dlist button{background:none;border:0;color:var(--ink);text-align:left;white-space:nowrap;padding:8px 14px;border-radius:14px;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .35s cubic-bezier(.32,.72,0,1),background .15s}
+#dd.open #dlist button{opacity:1;transform:none}
+#dlist button:hover:not(:disabled){background:rgba(255,255,255,.08)}#dlist button.on{color:var(--acc);font-weight:700}#dlist button:disabled{opacity:.35!important;cursor:default}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:5;pointer-events:none;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+#ar{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;width:176px;padding:4px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--ln2);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#ar button{background:transparent;color:var(--ink);border:1px solid var(--ln2);border-radius:50%;width:38px;height:38px;font-size:18px}
+#ar button:hover:not(:disabled){background:var(--acc);color:var(--bg);border-color:var(--acc)}#ar button:disabled{opacity:.3;cursor:default}
+#cnt{color:var(--mute);min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+.hide{display:none!important}
+@media(max-width:760px){
+.s{inset:56px 0 0 0;padding:14px 16px calc(44px + env(safe-area-inset-bottom,0px));-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px);mask-image:linear-gradient(to bottom,transparent 0,#000 14px)}
+.s.hero{inset:0;padding:calc(56px + env(safe-area-inset-top,0px)) 16px calc(56px + env(safe-area-inset-bottom,0px));-webkit-mask-image:none;mask-image:none}
+#nav{display:none!important}#dcnt{display:inline}#hint{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.tb span:first-child{flex-basis:110px}
+}
+@media(prefers-reduced-motion:reduce){.a{opacity:1;transform:none;animation:none}#dd,#dlist,#dlist button,#dbtn .ar{transition-duration:.01s!important;transition-delay:0s!important}}
+
+.s.hero .in{text-align:center}
+#gate .card{max-width:460px;margin:22px auto 0;text-align:left}
+#gate h1{font-size:clamp(24px,6.3vw,62px)!important;line-height:1.08!important}#gate .k{font-size:clamp(24px,6.3vw,62px)!important;font-family:Georgia,"Times New Roman",serif!important;font-weight:700!important;line-height:1.08!important;letter-spacing:0!important;margin:0 0 .15em!important}
+</style></head><body>
+<canvas id="bg" aria-hidden="true"></canvas><div id="bar"></div>
+<div id="top" class="hide"><div id="dd"><button id="dbtn" type="button" aria-haspopup="listbox" aria-expanded="false"><span id="dlab"></span><span id="dcnt"></span><span class="ar" aria-hidden="true">▾</span></button><div id="dlist" role="listbox"></div></div></div>
+<div id="hint" aria-live="polite"></div>
+<div id="nav" class="hide"><div id="ar"><button id="bk" type="button" aria-label="Previous">‹</button><span id="cnt"></span><button id="nx" type="button" aria-label="Next">›</button></div></div>
+<div class="s hero" id="gate"><div class="in">
+<p class="k a" style="--i:0">Functional English</p>
+<h1 class="a" style="--i:1">Study Guide</h1>
+<div class="card a" style="--i:2"><input id="nm" placeholder="Full name" autocomplete="name"><div style="height:10px"></div><input id="sap" placeholder="SAP ID" inputmode="numeric" autocomplete="off"><p id="err" class="err"></p><button class="go" id="start">Start →</button></div>
+</div></div>
+<div class="s hide" id="sl"></div>
+<script>
+const T=[
+{n:"Tenses",ic:"⏰",L:[
+{t:"12 tenses at a glance",b:[["def","Tense = the <b>time</b> of an action (present / past / future) + its <b>aspect</b> (simple / continuous / perfect / perfect continuous). <b>3 × 4 = 12 tenses.</b>"],["tbl",["","Present","Past","Future"],[["<b>Simple</b>","V1 (+s/es)","V2","will + V1"],["<b>Continuous</b>","am/is/are + V-ing","was/were + V-ing","will be + V-ing"],["<b>Perfect</b>","has/have + V3","had + V3","will have + V3"],["<b>Perfect Cont.</b>","has/have been + V-ing","had been + V-ing","will have been + V-ing"]]],["tip","Example (write): He <b>writes</b> · is <b>writing</b> · has <b>written</b> · has been <b>writing</b>."]]},
+{t:"Signal words & traps",b:[["tbl",["Signal word","Tense"],[["every day, usually","Simple Present"],["now, look!","Present Continuous"],["just, already, yet, ever, since, for","Present Perfect"],["yesterday, ago, last…","Simple Past"],["while","Past Continuous"],["by the time, before","Past Perfect"],["by then, by next March","Future Perfect"]]],["tip","<b>since</b> = starting point (since 2020) · <b>for</b> = length of time (for two years)."],["tip","<b>Future:</b> will (instant decision) · be going to (plan / evidence) · Present Continuous (arrangement) · Simple Present (timetable) · be about to (very soon)."],["warn","✗ He has gone yesterday → ✓ He <b>went</b> yesterday<br>✗ I am knowing → ✓ I <b>know</b><br>✗ If it will rain → ✓ If it <b>rains</b>"]]}],
+Q:[["I ___ him since Monday.",["didn’t see","haven’t seen","don’t see"],1,"“since” signals Present Perfect."],["If it ___ tomorrow, we shall stay at home.",["will rain","rains","is raining"],1,"No “will” after if/when — use Simple Present."],["Which sentence is correct?",["He has gone to Karachi yesterday.","He went to Karachi yesterday.","He is going to Karachi yesterday."],1,"A past-time word (yesterday) needs Simple Past, never Present Perfect."],["Look at those black clouds! It ___ rain.",["will","is going to","has"],1,"Visible evidence → be going to."]]},
+{n:"Active & Passive",ic:"🔁",L:[
+{t:"Active → Passive in 3 steps",b:[["steps",["Find <b>S, V, O</b>: Sita / loves / Savitri","Move the <b>object</b> to the front as the new subject","Add <b>be (same tense) + V3</b>, then <b>by</b> + old subject → <i>Savitri is loved by Sita.</i>"]],["tbl",["Tense","Active","Passive"],[["Simple Present","takes","is/am/are taken"],["Present Cont.","is taking","is being taken"],["Present Perfect","has taken","has been taken"],["Simple Past","took","was/were taken"],["Past Cont.","was taking","was being taken"],["Simple Future","will take","will be taken"],["Modal","must take","must be taken"]]]]},
+{t:"Special rules",b:[["list",["<b>Only transitive verbs</b> (with an object) can become passive.","<b>Drop “by…”</b> if the doer is unknown: Somebody has stolen my pen → My pen has been stolen.","<b>by</b> = person · <b>with</b> = tool: hit with a stick / by a boy.","<b>After by:</b> I→me, we→us, he→him, she→her, they→them.","<b>Two objects:</b> gave me a ticket → I was given a ticket.","<b>Questions:</b> Who broke it? → By whom was it broken?","<b>Prepositions stay:</b> They laughed at him → He was laughed at.","<b>Commands:</b> Close the door → Let the door be closed."]]]}],
+Q:[["Passive of: “Ali is writing a letter.”",["A letter is written by Ali.","A letter is being written by Ali.","A letter was being written by Ali."],1,"Present Continuous → is/am/are being + V3."],["Passive of: “We must obey the rules.”",["The rules must be obeyed.","The rules must obey.","The rules are obeyed."],0,"Modal + be + V3."],["Active of: “The thief was caught by the police.”",["The police caught the thief.","The police catch the thief.","The thief caught the police."],0,"Keep the same tense (Simple Past → caught)."]]},
+{n:"Phrases",ic:"🧩",L:[
+{t:"Phrases & their 3 kinds",b:[["def","A <b>phrase</b> makes sense but not complete sense. It has <b>no subject + finite verb</b> of its own: <i>in a corner, with great care.</i>"],["tbl",["Kind","Works like","Test","Example"],[["<b>Noun</b>","a noun","Replace with “it”","To win a prize is my ambition."],["<b>Adjective</b>","an adjective","Follows a noun; “which one?”","a woman of wonderful patience"],["<b>Adverb</b>","an adverb","How / when / where / why","He spoke with great care."]]],["tip","Adverb → phrase: quickly = with speed · suddenly = all of a sudden · there = in that place."]]}],
+Q:[["“The book on the table is mine.” — ‘on the table’ is a…",["Noun phrase","Adjective phrase","Adverb phrase"],1,"It describes the noun “book”."],["“He walked with great care.” — ‘with great care’ is a…",["Adverb phrase","Adjective phrase","Noun phrase"],0,"It tells how he walked (≈ carefully)."],["“She likes to read novels.” — ‘to read novels’ is a…",["Adverb phrase","Noun phrase","Adjective phrase"],1,"Replace with “it”: She likes it."]]},
+{n:"Clauses",ic:"🧱",L:[
+{t:"Clause basics & 3 kinds",b:[["def","A <b>clause</b> has its <b>own subject + verb</b>.<br><i>a chain of gold</i> = phrase · <i>a chain which is made of gold</i> = clause."],["list",["<b>Main clause</b> — stands alone.","<b>Subordinate clause</b> — depends on the main clause."]],["tbl",["Kind","Starts with","Example"],[["<b>Noun</b>","that, what, who, why, whether","I know <b>that he is honest</b>."],["<b>Adjective</b>","who, whose, which, that, where","The umbrella <b>which has a broken handle</b> is mine."],["<b>Adverb</b>","when, because, if, though","They rested <b>when evening came</b>."]]]]},
+{t:"8 kinds of adverb clause",b:[["tbl",["Kind","Joined by","Example"],[["Time","when, while, until","Wait until I return."],["Place","where, wherever","He fled where they could not follow."],["Purpose","so that, lest","Work hard so that you may succeed."],["Reason","because, since","I stayed home because it rained."],["Condition","if, unless","You will pass if you work hard."],["Result","so … that","It was so dark that we could not see."],["Comparison","than, as … as","He is taller than I am."],["Concession","though, although","He won though he began late."]]],["tip","Same clause, 3 jobs: <i>I knew where he was</i> (noun) · <i>the place where he was</i> (adjective) · <i>I went where he was</i> (adverb)."]]}],
+Q:[["“I know that he is honest.” — ‘that he is honest’ is a…",["Noun clause","Adjective clause","Adverb clause"],0,"It is the object of “know”."],["“This is the house where I was born.” — ‘where I was born’ is a…",["Noun clause","Adjective clause","Adverb clause of place"],1,"It describes the noun “house”."],["“He is taller than I am.” — ‘than I am’ is an adverb clause of…",["Reason","Condition","Comparison"],2,"“than” introduces a comparison."]]},
+{n:"Subject & Predicate",ic:"✂️",L:[
+{t:"Splitting a sentence",b:[["def","Every sentence = <b>Subject</b> (who/what it is about) + <b>Predicate</b> (what is said; contains the verb)."],["steps",["Find the <b>verb</b> first","Ask <b>Who / What + verb?</b> → that is the subject","Everything else is the predicate"]],["tbl",["Part","Meaning","Example"],[["Subject-word","main noun / pronoun","child"],["Attribute","describes the subject-word","The, little, tired of play"],["Verb","predicate-word","is sleeping"],["Adverbial qualification","how / when / where","soundly"]]],["warn","<b>Inverted:</b> Up went the balloon (subject: the balloon)<br><b>Command:</b> Close the door (subject: [You])<br><b>Question:</b> Is he coming? (subject: he)"]]}],
+Q:[["Subject of “Into the room walked the teacher.”",["Into the room","the teacher","walked"],1,"Who walked? The teacher."],["Understood subject of “Close the door.”",["The door","[You]","Close"],1,"Commands carry an understood “you”."],["Subject-word in “The old man’s dog barks loudly.”",["man","dog","barks"],1,"Who barks? The dog. “The old man’s” is its attribute."]]},
+{n:"Parts of Speech",ic:"🔤",L:[
+{t:"The 8 parts of speech",b:[["tbl",["Part","Job","Examples"],[["Noun","names person / place / thing / idea","Akbar, Lahore, courage"],["Pronoun","replaces a noun","he, they, who"],["Adjective","describes a noun","brave, twenty"],["Verb","action or state","write, is, sleep"],["Adverb","modifies verb / adjective / adverb","quickly, very"],["Preposition","links a noun to another word","in, on, of, with"],["Conjunction","joins words or clauses","and, but, because"],["Interjection","sudden emotion","Hurrah!, Alas!"]]]]},
+{t:"Nouns & dual-role words",b:[["tbl",["Noun kind","Examples"],[["Proper","Sita, India"],["Common","girl, city"],["Collective","crowd, team, jury"],["Abstract","honesty, childhood"]]],["tbl",["Word","Sentence","Part"],[["after","…after the show","Preposition"],["after","…after we had left","Conjunction"],["after","…soon after","Adverb"],["fast","a fast car","Adjective"],["fast","runs fast","Adverb"],["fast","Muslims fast","Verb"]]],["tip","A word’s part of speech depends on its <b>job in the sentence</b>."]]}],
+Q:[["“He runs fast.” — ‘fast’ is a(n)…",["Adjective","Adverb","Verb"],1,"It modifies the verb “runs”."],["“They arrived after we had left.” — ‘after’ is a(n)…",["Preposition","Adverb","Conjunction"],2,"It joins a clause (we had left)."],["“Team” is which kind of noun?",["Collective","Abstract","Proper"],0,"A group taken as one whole."]]},
+{n:"Reading Comprehension",ic:"📖",L:[
+{t:"5 steps to solve any passage",b:[["steps",["<b>Skim</b> for the topic","<b>Read slowly</b>: names, dates, reasons","<b>Match questions</b> to lines in the passage","Answer in <b>complete sentences, own words</b>","Meaning question? Give the <b>same part of speech</b>"]],["tbl",["Question","How to answer"],[["Factual","Find it in the passage"],["Reason (why/how)","Look for because / so / therefore"],["Word meaning","Use context; same part of speech"],["Inference","What does the action show about the person?"],["Title","Short; covers the whole passage"]]]]},
+{t:"Practice passage",b:[["pass","<b>Hamza’s Determination.</b> Every morning, Hamza walked two kilometres to reach his village school. The path was rough, and in summer the sun made the walk difficult. Many boys had stopped going to school because of the distance, but Hamza never missed a single day. One day, heavy rain washed away the bridge over the stream. Hamza walked along the bank until he found a narrow place, crossed on large stones, and reached school only ten minutes late. His teacher was amazed. She praised his courage, and the villagers built a new bridge so that every child could reach school safely."],["tip","Read it once, then answer the next 3 questions (use ← Back to re-read)."]]}],
+Q:[["How far was Hamza’s school from his home?",["Two kilometres","Ten minutes","Half a kilometre"],0,"“Two kilometres” — a factual answer."],["Why had many boys stopped going to school?",["The teacher was strict","The path was rough and the distance long","The school closed"],1,"Reason question: rough path + distance."],["Which word means “very surprised”?",["amazed","praised","determined"],0,"“His teacher was amazed.”"]]}
+];
+const S=[{k:"intro"}];let N=0;
+T.forEach((t,i)=>{t.L.forEach(l=>S.push({k:"learn",t:i,l}));t.Q.forEach(q=>S.push({k:"q",t:i,q,n:++N}))});S.push({k:"end"});
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const li=a=>a.map(x=>`<li>${x}</li>`).join("");
+const R={def:x=>`<div class="def">${x}</div>`,tip:x=>`<div class="tip">💡 ${x}</div>`,warn:x=>`<div class="warn">⚠️ ${x}</div>`,pass:x=>`<div class="pass">${x}</div>`,list:a=>`<ul>${li(a)}</ul>`,steps:a=>`<ol class="st">${a.map(x=>`<li><span>${x}</span></li>`).join("")}</ol>`,tbl:(h,r)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr>${r.map(w=>`<tr>${w.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`};
+let st={name:"",sap:"",cur:0,max:0,ans:{},t0:0,fin:false,lb:""};
+const sc=()=>S.reduce((a,s,j)=>a+(s.k==="q"&&st.ans[j]===s.q[2]?1:0),0);
+const mmss=s=>Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s";
+const sl=$("sl"),dd=$("dd"),dbtn=$("dbtn"),dl=$("dlist");
+/* topic jump list: Syllabus, each topic, Result */
+const M=[{n:"Syllabus",i:0}];T.forEach((t,k)=>M.push({n:t.ic+" "+t.n,i:S.findIndex(s=>s.t===k)}));M.push({n:"🏆 Result",i:S.length-1});
+M.forEach((m,k)=>{const b=document.createElement("button");b.type="button";b.setAttribute("role","option");b.textContent=(k+1)+". "+m.n;b.onclick=()=>{jump(m.i);cl()};dl.appendChild(b)});
+function cl(){dd.classList.remove("open");dbtn.setAttribute("aria-expanded","false")}
+dbtn.onclick=e=>{e.stopPropagation();const o=!dd.classList.contains("open");dd.classList.toggle("open",o);dbtn.setAttribute("aria-expanded",String(o))};
+document.addEventListener("click",e=>{if(!dd.contains(e.target))cl()});
+function render(anim=true){const s=S[st.cur];let h="",tp="Functional English",kick="";
+if(s.k==="intro"){tp="Syllabus";h=`<p class="k">Welcome, ${esc(st.name.split(" ")[0])} · SAP ID ${esc(st.sap)}</p><h2>Syllabus</h2>${R.tbl(["#","Topic","What you’ll cover"],[["1","<b>Tenses</b>","12 tenses, formulas, uses, ways to talk about the future"],["2","<b>Active and Passive Voice</b>","Changing voice, transformation rules, special cases"],["3","<b>Phrases</b>","Noun, adjective and adverb phrases"],["4","<b>Clauses</b>","Main vs. subordinate; noun, adjective and adverb clauses"],["5","<b>Subject and Predicate</b>","Subject-word, attributes, predicate-word"],["6","<b>Parts of Speech</b>","The 8 parts of speech, noun kinds, dual-role words"],["7","<b>Reading Comprehension</b>","5-step method, question types, practice passage"]])}`}
+else if(s.k==="learn"){const t=T[s.t];tp=t.ic+" "+t.n;h=`<p class="k">Topic ${s.t+1} of ${T.length}</p><h2>${s.l.t}</h2>`+s.l.b.map(b=>R[b[0]](...b.slice(1))).join("")}
+else if(s.k==="q"){const t=T[s.t],a=st.ans[st.cur],q=s.q;tp=t.ic+" "+t.n;h=`<p class="k">Question ${s.n} of ${N}</p><h2>${q[0]}</h2>`+q[1].map((o,k)=>`<button class="o ${a==null?"":k===q[2]?"ok":k===a?"bad":""}" data-k="${k}" ${a==null?"":"disabled"}><b>${"ABC"[k]}</b><span>${o}</span></button>`).join("")+(a==null?"":`<div class="fb ${a===q[2]?"g":"r"}"><b>${a===q[2]?"✓ Correct!":"✗ Not quite."}</b> ${q[3]}</div>`)}
+else{const c=sc(),p=Math.round(c/N*100);tp="🏆 Result";const secs=Math.round((Date.now()-st.t0)/1000);
+h=`<p class="k">Finished</p><div class="card" style="text-align:center"><div class="big">${c}/${N}</div><p style="margin:8px 0 0">${p>=80?"Excellent — exam-ready! 🎯":p>=50?"Good start — revisit the weaker topics.":"Re-read the learn slides and try again."}</p><p class="mut" style="margin:4px 0 0">${esc(st.name)} · ${esc(st.sap)} · ${mmss(st.secs||secs)}</p></div><div class="card"><b>By topic</b>`+T.map((t,i)=>{let a=0,n=0;S.forEach((x,j)=>{if(x.k==="q"&&x.t===i){n++;if(st.ans[j]===x.q[2])a++}});return`<div class="tb"><span>${t.ic} ${t.n}</span><i><u style="width:${a/n*100}%"></u></i><span style="flex:0 0 28px">${a}/${n}</span></div>`}).join("")+`</div><div class="card"><b>🏆 Class leaderboard</b><div id="lb" class="mut" style="margin-top:6px">${st.lb||"Loading…"}</div></div>`}
+sl.innerHTML=`<div class="in">${h}</div>`;
+[].forEach.call(sl.firstChild.children,(e,k)=>{e.classList.add("a");e.style.setProperty("--i",k)});
+sl.classList.toggle("na",!anim);sl.classList.remove("hide");sl.classList.toggle("hero",false);
+if(anim)sl.scrollTop=0;
+$("dlab").textContent=tp;$("dcnt").textContent=`${st.cur+1} / ${S.length}`;$("cnt").textContent=`${st.cur+1} / ${S.length}`;
+$("bar").style.width=((st.cur+1)/S.length*100)+"%";
+let cur=0;M.forEach((m,k)=>{if(st.cur>=m.i)cur=k});[].forEach.call(dl.children,(b,k)=>{b.classList.toggle("on",k===cur);b.disabled=M[k].i>st.max});
+const un=s.k==="q"&&st.ans[st.cur]==null,last=st.cur===S.length-1;
+$("bk").disabled=!st.cur;$("nx").disabled=un||last;$("hint").textContent=un?"Pick an answer to continue":"";
+if(last)finish()}
+function go(d){const n=st.cur+d;if(n<0||n>=S.length)return;if(d>0&&S[st.cur].k==="q"&&st.ans[st.cur]==null)return;st.cur=n;st.max=Math.max(st.max,n);render()}
+function jump(i){if(i<0||i>st.max||i===st.cur)return;st.cur=i;render()}
+sl.addEventListener("click",e=>{const b=e.target.closest(".o");if(!b||st.ans[st.cur]!=null)return;st.ans[st.cur]=+b.dataset.k;render(false);sl.scrollTop=sl.scrollHeight});
+$("nx").onclick=()=>go(1);$("bk").onclick=()=>go(-1);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")cl();if($("sl").classList.contains("hide"))return;if(e.key==="ArrowRight"||e.key==="PageDown")go(1);if(e.key==="ArrowLeft"||e.key==="PageUp")go(-1)});
+let x0=null,y0=0,sk=true;document.addEventListener("touchstart",e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY;sk=!!(e.touches.length>1||e.target.closest("#dd,.tw,input,textarea"))},{passive:true});
+document.addEventListener("touchend",e=>{if(x0==null||sk||sl.classList.contains("hide"))return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5){cl();go(dx<0?1:-1)}},{passive:true});
+const sid=s=>s.replace(/[^A-Za-z0-9_-]/g,"");
+const API="scores.php",JH={"Content-Type":"application/json"};
+async function apiRows(res){if(!res.ok)throw 0;const j=await res.json();if(!Array.isArray(j))throw 0;return j}
+async function finish(){if(st.fin){return}st.fin=true;st.secs=Math.round((Date.now()-st.t0)/1000);const c=sc();let rows=null;
+try{rows=await apiRows(await fetch(API,{method:"POST",headers:JH,body:JSON.stringify({quiz:"english",name:st.name,sap:st.sap,score:c,max:N,secs:st.secs})}))}catch(e){}
+if(!rows){try{rows=await apiRows(await fetch(API+"?quiz=english",{cache:"no-store"}))}catch(e){}}
+showLB(rows,c)}
+function showLB(rows,c){const ok=!!rows;if(!rows)rows=[{name:st.name,sap:st.sap,score:c,max:N,secs:st.secs}];
+rows=rows.slice().sort((a,b)=>b.score-a.score||a.secs-b.secs);const md=["🥇","🥈","🥉"];
+st.lb=(rows.length?`<table class="lb"><tr><th>#</th><th>Name</th><th>SAP</th><th>Score</th><th>Time</th></tr>`+rows.slice(0,30).map((r,i)=>`<tr class="${r.sap===st.sap?"me":""}"><td>${md[i]||i+1}</td><td>${esc(r.name)}</td><td>${esc(r.sap)}</td><td>${r.score}/${N}</td><td>${mmss(r.secs)}</td></tr>`).join("")+`</table>`:"No scores yet — you’re first!")+(ok?"":`<p class="mut">Couldn’t reach the shared board, so only your score is shown.</p>`);
+if($("lb"))$("lb").innerHTML=st.lb}
+function begin(){const n=$("nm").value.trim(),s=$("sap").value.trim();if(n.length<2||sid(s).length<4){$("err").textContent="Enter your full name and a valid SAP ID.";return}
+st.name=n;st.sap=sid(s);st.t0=Date.now();$("gate").classList.add("hide");$("top").classList.remove("hide");$("nav").classList.remove("hide");render()}
+$("start").onclick=begin;[$("nm"),$("sap")].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")begin()}));
+
+(function(){const c=document.getElementById('bg'),x=c.getContext('2d'),G=["A","a","?","!","“","”",",",";","&","Aa"],P=[];let W,H,D=Math.min(devicePixelRatio||1,2);
+function rs(){W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0)}
+rs();addEventListener('resize',rs);
+const n=Math.round(Math.min(34,Math.max(16,W*H/38000)));
+for(let i=0;i<n;i++)P.push({g:G[i%G.length],x:Math.random()*W,y:Math.random()*H,s:16+Math.random()*34,v:.12+Math.random()*.3,r:Math.random()*6.28,w:(Math.random()-.5)*.004,a:.08+Math.random()*.16});
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function draw(){x.clearRect(0,0,W,H);for(const p of P){x.save();x.translate(p.x,p.y);x.rotate(p.r);x.globalAlpha=p.a;x.fillStyle='#5fd39b';x.font=p.s+'px Georgia,serif';x.fillText(p.g,0,0);x.restore();if(!still){p.y-=p.v;p.r+=p.w;if(p.y<-60){p.y=H+60;p.x=Math.random()*W}}}
+if(!still)requestAnimationFrame(draw)}
+draw()})();
+
+</script></body></html>

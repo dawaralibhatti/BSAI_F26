@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discrete Structures: Study Notes</title>
+<style>
+:root{--bg:#0e1b2b;--bg2:#15283d;--ink:#eef2f7;--mute:#9fb0c4;--gold:#e3ad63;--teal:#5cc3d1;--red:#ff8a80;--grn:#7adba0}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:clamp(14px,1.55vw,19px)/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;opacity:.5;z-index:0}
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--gold);width:0;transition:width .4s;z-index:5}
+.s{position:fixed;inset:0;padding:12vh 7vw 11vh;display:flex;flex-direction:column;justify-content:center;visibility:hidden;opacity:0;transition:opacity .35s,visibility .35s;overflow-y:auto;z-index:1}
+.s.on{visibility:visible;opacity:1}
+h1,h2{font-family:Georgia,"Times New Roman",serif;margin:0 0 .5em;line-height:1.1}
+h1{font-size:clamp(34px,7vw,88px)}
+h2{font-size:clamp(24px,3.8vw,46px)}
+.k{color:var(--gold);font-weight:600;margin:0 0 .6em}
+.sub{color:var(--mute);max-width:36em}
+.g{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.c{background:var(--bg2);border:1px solid #27405c;border-radius:12px;padding:14px 16px}
+.c b{color:var(--gold)}
+.c.v{border-color:var(--grn)}.c.x{border-color:var(--red)}
+.m{font-family:ui-monospace,Consolas,monospace}
+.big{font:700 clamp(22px,3.6vw,44px)/1.3 ui-monospace,Consolas,monospace;color:var(--teal)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:6px 10px;text-align:center;border-bottom:1px solid #27405c}
+th{color:var(--gold)}
+
+td.T{color:var(--grn)}td.F{color:var(--red)}
+.a{opacity:0;transform:translateY(24px)}
+.on .a{animation:up .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.09s + .15s)}
+@keyframes up{to{opacity:1;transform:none}}
+.btn{font:inherit;font-weight:700;background:var(--gold);color:var(--bg);border:0;border-radius:8px;padding:8px 16px;cursor:pointer;margin:4px 6px 4px 0}
+.btn.o{background:none;color:var(--ink);border:1px solid #3b5a7a}
+.btn:focus-visible,#nav button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.dots{display:flex;gap:10px;margin:12px 0}
+.dot{width:clamp(26px,4vw,44px);height:clamp(26px,4vw,44px);border-radius:50%;background:var(--grn);display:grid;place-items:center;color:var(--bg);font-weight:700;transition:background .3s,transform .3s}
+.dot.bad{background:var(--red);transform:scale(1.15)}
+.dot.dim{background:#3b5a7a}
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:5;background:none;border:0;pointer-events:none;padding:8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px}#ar{display:flex;align-items:center;justify-content:space-between;width:168px}#ar>*{pointer-events:auto}#tp{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.ch{background:none;color:var(--mute);border:1px solid #3b5a7a;border-radius:999px;padding:3px 12px;font:inherit;font-size:.85em;cursor:pointer}.ch:hover{color:var(--ink)}.ch.on{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700}
+#ar button{background:transparent;color:var(--ink);border:1px solid #3b5a7a;border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer}
+#cnt{color:var(--mute);min-width:60px;text-align:center}
+#hint{position:fixed;right:18px;bottom:2.4vh;color:var(--mute);font-size:.8em;z-index:5}
+.pulse{animation:pl 2.4s ease-in-out infinite}
+@keyframes pl{50%{box-shadow:0 0 0 8px rgba(227,173,99,.0),0 0 24px rgba(227,173,99,.35)}}
+#top{position:fixed;top:4px;left:0;right:0;z-index:5;display:flex;justify-content:center;padding:10px;pointer-events:none}#dd{position:relative;width:168px;border:1px solid #3b5a7a;border-radius:19px;background:rgba(21,40,61,0);overflow:hidden;pointer-events:auto;transition:width .4s cubic-bezier(.32,.72,0,1),background .3s,border-color .3s,box-shadow .3s,border-radius .4s}#dd.open{width:min(400px,92vw);border-radius:22px;background:rgba(21,40,61,.74);-webkit-backdrop-filter:blur(14px) saturate(1.25);backdrop-filter:blur(14px) saturate(1.25);border-color:rgba(255,255,255,.16);box-shadow:0 14px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}#dbtn{width:100%;height:36px;display:flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--ink);border:0;font:inherit;cursor:pointer;white-space:nowrap}#dbtn .ar{display:inline-block;transition:transform .4s cubic-bezier(.32,.72,0,1)}#dd.open #dbtn .ar{transform:rotate(180deg)}#dbtn:focus-visible,#dlist button:focus-visible{outline:2px solid var(--teal);outline-offset:-3px}#dlist{display:flex;flex-direction:column;max-height:0;padding:0 6px;visibility:hidden;transition:max-height .4s cubic-bezier(.32,.72,0,1),padding .4s,visibility 0s .4s}#dd.open #dlist{max-height:480px;padding:0 6px 8px;visibility:visible;transition-delay:0s}#dlist button{background:none;border:0;color:var(--ink);font:inherit;text-align:left;white-space:nowrap;padding:8px 14px;border-radius:14px;cursor:pointer;opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .35s cubic-bezier(.32,.72,0,1),background .15s}#dd.open #dlist button{opacity:1;transform:none}#dd.open #dlist button:nth-child(1){transition-delay:.04s}#dd.open #dlist button:nth-child(2){transition-delay:.07s}#dd.open #dlist button:nth-child(3){transition-delay:.1s}#dd.open #dlist button:nth-child(4){transition-delay:.13s}#dd.open #dlist button:nth-child(5){transition-delay:.16s}#dd.open #dlist button:nth-child(6){transition-delay:.19s}#dd.open #dlist button:nth-child(7){transition-delay:.22s}#dd.open #dlist button:nth-child(8){transition-delay:.25s}#dd.open #dlist button:nth-child(9){transition-delay:.28s}#dd.open #dlist button:nth-child(10){transition-delay:.31s}#dd.open #dlist button:nth-child(11){transition-delay:.34s}#dlist button:hover{background:rgba(255,255,255,.08)}#dlist button.on{color:var(--gold);font-weight:700}@media(prefers-reduced-motion:reduce){#dd,#dlist,#dlist button,#dbtn .ar{transition-duration:.01s!important;transition-delay:0s!important}}code{font-family:ui-monospace,Consolas,monospace;color:var(--teal)}.vn{display:inline-block;text-align:center;margin:4px 12px}.vn svg{display:block;margin:auto}.vn span{display:block;color:var(--gold);font-size:.85em}.row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.bx{border:2px solid var(--teal);border-radius:8px;padding:8px 14px;font-weight:700}.bx.h{border-color:var(--gold)}.sm{font-size:.85em}.sm th,.sm td{padding:3px 8px}details{background:var(--bg2);border:1px solid #27405c;border-radius:10px;padding:8px 14px}summary{cursor:pointer;font-weight:600}details[open] summary{color:var(--gold);margin-bottom:4px}input{font:inherit;background:var(--bg2);color:var(--ink);border:1px solid #3b5a7a;border-radius:6px;padding:4px 8px;width:6em}.s .m,.s .sm{text-align:left}table.m td,table.m th{text-align:center}
+.s.fo table:not(.fc){filter:brightness(.45)}.s.fo table.fc th:not(.cf),.s.fo table.fc td:not(.cf){filter:brightness(.45)}td,th{cursor:pointer;transition:filter .3s,font-size .3s,background .3s}table .hl{background:#1d3550!important}table.fc{border-collapse:separate;border-spacing:0}table .cf{background:rgba(227,173,99,.14)!important;font-weight:700;font-size:1.15em;box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold)}table .cf.ct{box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold),inset 0 2px 0 var(--gold);border-radius:10px 10px 0 0}table .cf.cb{box-shadow:inset 2px 0 0 var(--gold),inset -2px 0 0 var(--gold),inset 0 -2px 0 var(--gold);border-radius:0 0 10px 10px;border-bottom-color:transparent}th:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+table.rm tbody tr{cursor:pointer}table.rm tbody tr:hover td{background:#1d3550!important}table.rm .cf{box-shadow:inset 0 2px 0 var(--gold),inset 0 -2px 0 var(--gold)}table.rm .cf.rl{box-shadow:inset 0 2px 0 var(--gold),inset 0 -2px 0 var(--gold),inset 2px 0 0 var(--gold);border-radius:10px 0 0 10px}table.rm .cf.rr{box-shadow:inset 0 2px 0 var(--gold),inset 0 -2px 0 var(--gold),inset -2px 0 0 var(--gold);border-radius:0 10px 10px 0}.s.fo table.rm.fc th:not(.cf){filter:none}.s.fo .c.hf{filter:none}tbody tr:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+@media(max-width:600px){#hint{display:none}}
+@media(prefers-reduced-motion:reduce){.a{opacity:1;transform:none}.on .a{animation:none}.dot{transition:none}.pulse{animation:none}}
+#dbtn{color:var(--gold);font-weight:700}body.tf .s{padding-top:max(12vh,170px)}#tn{position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:4;max-width:92vw;text-align:center;font:700 clamp(28px,4.2vw,56px)/1.15 Georgia,serif;color:var(--gold);pointer-events:none;animation:tn .6s ease both}#tn[hidden]{display:none}@keyframes tn{from{opacity:0;transform:translate(-50%,-8px)}}.s h2{display:inline-block;align-self:flex-start;border-bottom:3px solid var(--gold);padding-bottom:6px;margin-bottom:.6em}
+.s .g{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));align-items:stretch;gap:16px}
+.s .c{font-size:clamp(16px,1.55vw,21px);line-height:1.65;padding:16px 20px;border-left:4px solid var(--gold);cursor:pointer;transition:box-shadow .2s,background .2s,filter .25s}
+.s .c.v{border-left-color:var(--grn)}.s .c.x{border-left-color:var(--red)}
+.s .c:hover{background:#1c3550;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+.s .c.warn{border-left-color:var(--red);background:#2a1f2c}.s .c.tip{border-left-color:var(--teal);background:#13303a}
+.s .c.warn::before,.s .c.tip::before{display:block;font:700 .7em system-ui;letter-spacing:.12em;margin-bottom:4px}
+.s .c.warn::before{content:"WATCH OUT";color:#ff8a80}.s .c.tip::before{content:"EXAM TIP";color:var(--teal)}
+.s .c.fx{display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(20px,2.4vw,30px)}
+.s .c code{background:#0e1b2b;border:1px solid #27405c;border-radius:8px;padding:2px 9px;font-size:.95em}
+.s.fo .c:not(.foc){filter:brightness(.45)}.s .c.foc{box-shadow:0 0 0 2px var(--gold),0 10px 30px rgba(0,0,0,.5);font-size:clamp(18px,1.9vw,25px)}
+.s .c:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+th{background:#1d3550;padding:9px 12px}td{padding:8px 12px}tbody tr:nth-child(even) td{background:#12253a}table{border-radius:10px;overflow:hidden}
+.s>table{margin-top:24px}.s>.row{margin-top:10px}
+#mcq{width:100%;max-width:820px;margin:auto;text-align:left}#mcq .qn{color:var(--gold);font-weight:700}
+#mcq .qt{font-size:clamp(18px,2.2vw,28px);line-height:1.4;margin:6px 0 14px}
+#mcq .mo{display:block;width:100%;text-align:left;font:inherit;font-size:clamp(16px,1.7vw,22px);color:var(--ink);background:var(--bg2);border:1px solid #3b5a7a;border-radius:12px;padding:12px 16px;margin:8px 0;cursor:pointer}
+#mcq .mo:hover:not(:disabled){border-color:var(--gold)}#mcq .mo:disabled{color:var(--ink);opacity:1;cursor:default}
+#mcq .mo.ok{border-color:var(--grn);background:#16392d}#mcq .mo.no{border-color:var(--red);background:#3a1f26}
+#mcq .ex{margin:12px 0;font-size:clamp(15px,1.6vw,20px);line-height:1.6}
+.c[data-go]{cursor:pointer;transition:border-color .2s,transform .2s}.c[data-go]:hover{border-color:var(--gold);transform:translateY(-3px)}
+#cx{min-height:6.5em}#cx .ex2{background:var(--bg2);border:1px solid #27405c;border-left:3px solid var(--gold);border-radius:10px;padding:10px 14px;margin:0 0 8px}#cx .ex2 b{color:var(--gold)}#cx .ex2 .m{color:var(--teal)}
+.ord{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;margin:6px 0 8px;min-width:0;overflow-x:auto}.ol{background:var(--bg);border:1.5px solid var(--teal);border-radius:8px;padding:2px 8px;text-align:center;min-width:3em;line-height:1.25}.ol small{display:block;color:var(--mute);font-size:.7em}.ol .m{display:block;text-align:center;font-size:1.15em;font-weight:700;color:var(--gold)}.ol i{display:block;font-style:normal;font-size:.62em;white-space:nowrap;color:var(--mute)}.oa{color:var(--mute)}.og{color:var(--gold);font-weight:700}
+.tb{display:none}
+@media(max-width:760px){
+html,body{height:100%;overflow:hidden}body{padding-top:0}
+#nav{display:flex!important}
+.tb{display:none!important}
+.s,body.tf .s{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:flex-start;visibility:hidden;opacity:0;overflow-y:auto;overflow-x:hidden;padding:84px 16px 110px;transition:opacity .35s,visibility .35s}
+.s.on,body.tf .s.on{visibility:visible;opacity:1}
+.s+.s{border-top:0}
+.s.hero{min-height:0;justify-content:center}
+.a{opacity:0;transform:translateY(24px)}
+.on .a{animation:up .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.09s + .15s)}
+}
+@media(max-width:760px){
+html,body{height:auto;overflow:visible;overflow-x:hidden;font-size:16px}
+body{padding-top:64px}
+#nav,#hint,#tn{display:none!important}
+#top{padding:8px}#dd{background:rgba(21,40,61,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-color:#3b5a7a}
+.s,body.tf .s{position:relative;inset:auto;display:block;visibility:visible;opacity:1;overflow:visible;transition:none;padding:28px 16px;scroll-margin-top:56px}
+.s+.s{border-top:1px solid #27405c}
+.s.hero{min-height:calc(100svh - 64px);display:flex;flex-direction:column;justify-content:center}
+.a,.on .a{opacity:1;transform:none;animation:none}
+.s .g{grid-template-columns:1fr;gap:12px}
+.s .c{padding:14px 16px;font-size:16px;line-height:1.6}
+.s .c.fx{font-size:19px}
+.s.fo .c:not(.foc){filter:none}.s .c.foc{font-size:16px}
+.s h2{display:block;font-size:26px;border-bottom-width:2px}
+h1{font-size:44px}
+.s table,.c table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+th,td{padding:6px 8px}
+svg{max-width:100%;height:auto}
+.big{font-size:24px}
+.btn{padding:10px 16px}
+.tb{display:block;padding:36px 16px 4px;color:var(--gold);font:700 13px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;position:relative;z-index:1;scroll-margin-top:56px;border-top:1px solid #27405c}
+.tb+.s{border-top:0;padding-top:12px}
+}
+@media(max-width:760px){
+html,body{height:100%;overflow:hidden}body{padding-top:0}
+#nav{display:flex!important}
+.tb{display:none!important}
+.s,body.tf .s{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:flex-start;visibility:hidden;opacity:0;overflow-y:auto;overflow-x:hidden;padding:84px 16px 110px;transition:opacity .35s,visibility .35s}
+.s.on,body.tf .s.on{visibility:visible;opacity:1}
+.s+.s{border-top:0}
+.s.hero{min-height:0;justify-content:center}
+.a{opacity:0;transform:translateY(24px)}
+.on .a{animation:up .6s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0)*.09s + .15s)}
+}
+@media(max-width:760px){
+.s table,.c table,.s>table{display:table;width:100%;max-width:100%;overflow:visible}
+.s>.a table,.s .a>table{width:100%}
+th,td{padding:6px 4px;font-size:13px;word-break:break-word}
+.s table.m td,.s table.m th{font-size:13px}
+}
+@media(max-width:760px){
+#nav{background:rgba(21,40,61,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid #3b5a7a;pointer-events:auto;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+#ar{width:100%;max-width:420px}
+#ar button{background:var(--gold);color:var(--bg);border-color:var(--gold);width:44px;height:44px;font-weight:700}
+.s,body.tf .s{padding-bottom:96px}
+}
+@media(max-width:760px){
+#nav{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0;pointer-events:none;padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+#ar{width:176px;max-width:none;padding:4px;border-radius:999px;background:rgba(21,40,61,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid #3b5a7a;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#ar button{background:transparent;color:var(--ink);border:1px solid #3b5a7a;width:38px;height:38px;font-weight:400}
+}
+@media(max-width:760px){
+.s,body.tf .s{justify-content:flex-start}
+.s>:first-child{margin-top:auto}
+.s>:last-child{margin-bottom:auto}
+}
+#dcnt{display:none}
+@media(max-width:760px){
+#nav{display:none!important}
+.s,body.tf .s{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));touch-action:pan-y pinch-zoom}
+#dcnt{display:inline;color:var(--mute);font-weight:600;font-variant-numeric:tabular-nums;padding-left:8px;border-left:1px solid #3b5a7a;line-height:1.1}
+.s.pk,body.tf .s.pk{visibility:visible;opacity:1}
+.s.pk .a,body.sw .on .a{opacity:1;transform:none;animation:none}
+}
+@media(max-width:760px){
+.s,body.tf .s{inset:56px 0 0 0;padding-top:14px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px);mask-image:linear-gradient(to bottom,transparent 0,#000 14px)}
+.c div[style*="auto 1fr"]{grid-template-columns:1fr!important;gap:10px!important}
+.c div[style*="border-left:2px solid"]{border-left:0!important;padding-left:0!important;border-top:1px solid #27405c;padding-top:10px;font-size:.85em!important}
+.ord{flex-direction:column;align-items:stretch;gap:0;overflow:visible;margin:6px 0 2px!important}
+.ol{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 12px;text-align:left}
+.ol .m{display:inline;font-size:1.1em}
+.ol i{display:inline;font-size:.8em;white-space:normal;text-align:right}
+.oa{align-self:center;transform:rotate(90deg);line-height:1;height:14px;display:flex;align-items:center;font-size:.8em}
+}
+@media(max-width:760px) and (prefers-color-scheme:light){
+#top #dd{background:rgba(190,200,215,.74);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);border-color:rgba(255,255,255,.3);box-shadow:0 4px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.25)}
+#top #dd.open{background:rgba(176,188,205,.88);border-color:rgba(255,255,255,.3);box-shadow:0 14px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+#dbtn{color:#4f3305}
+#dcnt{color:#1f2f44;border-left-color:rgba(14,27,43,.35)}
+#dlist button{color:#0e1b2b}
+#dlist button:hover{background:rgba(14,27,43,.1)}
+#dlist button.on{color:#4f3305}
+#dbtn:focus-visible,#dlist button:focus-visible{outline-color:#0e1b2b}
+}
+.tl{display:none}
+@media(max-width:760px){.tl{display:block;text-align:center;color:var(--gold);font:700 26px/1.25 Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0 0 16px}}
+@media(max-width:760px){
+.s .c.foc{font-size:16px}
+.s .c.fx.foc{font-size:19px}
+.s table td.cf,.s table th.cf{font-size:13px}
+}
+.s.hero{text-align:center}
+.s.hero h1{font-size:clamp(24px,6.3vw,62px)!important;line-height:1.08!important}.s.hero .k{font-size:clamp(24px,6.3vw,62px)!important;font-family:Georgia,"Times New Roman",serif!important;font-weight:700!important;line-height:1.08!important;letter-spacing:0!important;margin:auto 0 .15em!important}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas><div id="bar"></div>
+
+<div class="s" data-t="Intro">
+<p class="k a" style="--i:0">Discrete Structures</p>
+<h1 class="a" style="--i:1">Study Notes</h1>
+</div>
+
+<div class="s" data-t="Intro">
+<h2 class="a">Syllabus</h2>
+<div class="g">
+<div class="c a" data-go="1.1" style="--i:1"><b>1.1 Variables</b><br>Placeholders, ∀ / if-then / ∃ statements, rewrite them</div>
+<div class="c a" data-go="1.2" style="--i:1"><b>1.2 Sets</b><br>Roster and builder notation, subsets, pairs, × products</div>
+<div class="c a" data-go="2.1" style="--i:1"><b>2.1 Logic</b><br>Truth tables, equivalence, simplify with laws, De Morgan</div>
+<div class="c a" data-go="2.2" style="--i:2"><b>2.2 Conditionals</b><br>p→q table, negate, contrapositive, only if</div>
+<div class="c a" data-go="2.3" style="--i:3"><b>2.3 Arguments</b><br>Valid or invalid? Name the fallacy</div>
+<div class="c a" data-go="3.1" style="--i:6"><b>3.1 Quantifiers</b><br>Truth of ∀/∃, negate, translate</div>
+<div class="c a" data-go="3.2" style="--i:1"><b>3.2 Negating ∀/∃</b><br>Negate quantifiers, vacuous truth, converse, necessary/sufficient</div>
+<div class="c a" data-go="4.1" style="--i:7"><b>4.1 Direct proof</b><br>Even/odd, prove ∀, disprove with a counterexample</div>
+<div class="c a" data-go="4.2" style="--i:1"><b>4.2 Writing proofs</b><br>Style rules, common mistakes, a model proof</div></div>
+</div>
+
+<div class="s" data-t="1.1"><h2 class="a">Why use a variable?</h2><div class="g">
+<div class="c a"><b>1. A name for something unknown</b><br>“Is there a number with: doubling it and adding 3 gives its square?” becomes:<div class="m">Is there an x with 2x + 3 = x²?</div>Yes: x = 3 (9 = 9) and x = −1 (1 = 1).</div>
+<div class="c a"><b>2. Talk about every element at once</b><br>“Whatever number you pick, if it is greater than 2 then its square is greater than 4” becomes:<div class="m">For every number n, if n &gt; 2 then n² &gt; 4.</div></div></div>
+<p class="sub a" style="max-width:none">Replacing the vague word “it” by a letter removes any ambiguity.</p></div>
+
+<div class="s" data-t="1.1"><h2 class="a">Three kinds of statements</h2><div class="g">
+<div class="c a"><b>Universal</b><br>True for all elements of a set.<div class="m">All positive numbers are greater than 0.</div></div>
+<div class="c a"><b>Conditional</b><br>If one thing is true, then another is too.<div class="m">If 378 is divisible by 18, then 378 is divisible by 6.</div></div>
+<div class="c a"><b>Existential</b><br>At least one thing has the property.<div class="m">There is a prime number that is even.</div></div></div></div>
+
+<div class="s" data-t="1.1"><h2 class="a">Universal conditional: many wordings</h2><div class="g">
+<div class="c a"><b>Formal</b><div class="m">For every animal a, if a is a dog, then a is a mammal.</div></div>
+<div class="c a"><b>Universal hidden</b><div class="m">If a is a dog, then a is a mammal.</div></div>
+<div class="c a"><b>Conditional hidden</b><div class="m">For every dog a, a is a mammal.<br>All dogs are mammals.</div></div></div>
+<p class="sub a" style="max-width:none">All of these say the same thing. Being able to translate between them is the skill to practice.</p></div>
+
+<div class="s" data-t="1.1"><h2 class="a">Mixing “for every” and “there is”</h2><div class="g">
+<div class="c a"><b>Every … has some …</b><div class="m">Every real number r has an additive inverse.<br>For every real r, there is a real s with r + s = 0.</div>The s depends on r: for r = 5 it is −5.</div>
+<div class="c a"><b>There is one … for every …</b><div class="m">There is a positive integer m such that for every positive integer n, m ≤ n.</div>One m works for all n: m = 1.</div></div>
+<p class="sub a" style="max-width:none">The order matters. In “every, then there is” the thing found can change each time. In “there is, then every” one thing must work for all.</p></div>
+
+<div class="s" data-t="1.1"><h2 class="a">Try it</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. Is there an x with 2x + 3 = x²?</summary>Yes. x = 3 gives 9 = 9, and x = −1 gives 1 = 1.</details>
+<details class="a"><summary>2. Rewrite with variables: “Do two numbers exist whose sum of squares equals the square of their sum?”</summary>Are there numbers a and b with a² + b² = (a + b)²? Yes, for example a = 1, b = 0.</details>
+<details class="a"><summary>3. Rewrite “Every pot has a lid” using variables.</summary>For every pot P, there is a lid L such that L is a lid for P.</details>
+<details class="a"><summary>4. Rewrite “For every real x, if x is nonzero then x² is positive” without variables.</summary>The square of any nonzero real number is positive. Or: all nonzero real numbers have positive squares.</details></div></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Sets and roster notation</h2><div class="g">
+<div class="c a"><b>Set</b><br>A collection of elements.<div class="m">x ∈ S: x is in S<br>x ∉ S: x is not in S</div></div>
+<div class="c a"><b>Roster notation</b><br>List the elements in braces.<div class="m">{1, 2, 3}<br>{1, 2, 3, …, 100}<br>{1, 2, 3, …} (infinite)</div></div>
+<div class="c a"><b>Order and repeats do not matter</b><div class="m">{1, 2, 3} = {3, 1, 2} = {1, 1, 2, 3, 3, 3}</div></div>
+<div class="c x a"><b>Careful</b><br>{0} ≠ 0, since {0} is a set with one element. {1, {1}} has 2 elements: the number 1 and the set {1}.</div></div></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Number sets and builder notation</h2><div class="g">
+<div class="c a"><b>Named sets</b><div class="m">ℝ reals<br>ℤ integers<br>ℚ rationals (fractions of integers)<br>ℝ⁺, ℤ⁺ only positive</div>0 is neither positive nor negative.</div>
+<div class="c a"><b>Set-builder</b><div class="m">{x ∈ S | P(x)}</div>“The set of all x in S such that P(x) is true.”</div>
+<div class="c a"><b>Examples</b><div class="m">{x ∈ ℝ | −2 &lt; x &lt; 5}: every real between −2 and 5<br>{x ∈ ℤ | −2 &lt; x &lt; 5} = {−1, 0, 1, 2, 3, 4}<br>{x ∈ ℤ⁺ | −2 &lt; x &lt; 5} = {1, 2, 3, 4}</div></div></div>
+<p class="sub a" style="max-width:none">Integers are separate points, so they are discrete. The real line has no gaps, so it is continuous. That is where “discrete mathematics” gets its name.</p></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Subsets</h2><div class="g">
+<div class="c a"><b>A ⊆ B</b><br>Every element of A is also in B.<div class="m">∀x, if x ∈ A then x ∈ B</div></div>
+<div class="c x a"><b>A ⊈ B</b><br>Some element of A is not in B.<div class="m">∃x, x ∈ A and x ∉ B</div></div>
+<div class="c a"><b>Proper subset</b><br>A ⊆ B, and B has at least one element not in A. Every set is a subset of itself, but not a proper one.</div>
+<div class="c a"><b>∈ is not ⊆</b><div class="m">2 ∈ {1, 2, 3} true<br>{2} ∈ {1, 2, 3} false<br>{2} ⊆ {1, 2, 3} true<br>{2} ∈ {{1}, {2}} true</div></div></div></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Ordered pairs and tuples</h2><div class="g">
+<div class="c a"><b>Ordered pair</b><br>(a, b): order matters, a is first and b is second.<div class="m">(a, b) = (c, d) iff a = c and b = d</div></div>
+<div class="c a"><b>Examples</b><div class="m">(1, 2) ≠ (2, 1)<br>(3, 1/2) = (√9, 5/10)<br>(1, 1) is allowed</div></div>
+<div class="c a"><b>n-tuple</b><br>(x₁, x₂, …, xₙ): same idea with n entries. Two n-tuples are equal when every matching entry is equal.<div class="m">(1, 2, 3, 4) ≠ (1, 2, 4, 3)</div></div></div>
+<p class="sub a" style="max-width:none">{a, b} = {b, a} but (a, b) ≠ (b, a) unless a = b.</p></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Cartesian products and strings</h2><div class="g">
+<div class="c a"><b>A × B</b><br>All ordered pairs with first entry from A and second from B.<div class="m">A = {x, y}, B = {1, 2, 3}<br>A × B = {(x,1), (y,1), (x,2), (y,2), (x,3), (y,3)}</div></div>
+<div class="c a"><b>Size and order</b><br>|A × B| = |A| · |B|, so 2 · 3 = 6. B × A has the same size but different pairs, so A × B ≠ B × A. ℝ × ℝ is the Cartesian plane.</div>
+<div class="c a"><b>Strings</b><br>An ordered n-tuple written without brackets or commas. A bit string uses only 0 and 1.<div class="m">{a, b, c} set<br>(a, b, c) triple<br>abc string</div>These are all different objects.</div></div></div>
+
+<div class="s" data-t="1.2"><h2 class="a">Try it</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. Is {1, 2, 3} = {3, 1, 2, 2}?</summary>Yes. Order and repeats do not matter.</details>
+<details class="a"><summary>2. List {x ∈ ℤ | −2 &lt; x &lt; 5}.</summary>{−1, 0, 1, 2, 3, 4}</details>
+<details class="a"><summary>3. Let B = {n ∈ ℤ | 0 ≤ n ≤ 100}. Is B ⊆ ℤ⁺?</summary>No. 0 is in B but not in ℤ⁺.</details>
+<details class="a"><summary>4. Is {2} ∈ {1, 2, 3}? Is {2} ⊆ {1, 2, 3}?</summary>First is false, since the elements are 1, 2, 3 and not {2}. Second is true.</details>
+<details class="a"><summary>5. Let A = {x, y}, B = {1, 2, 3}. How many elements are in A × B?</summary>2 · 3 = 6.</details>
+<details class="a"><summary>6. List the strings of length 2 over {0, 1}.</summary>00, 01, 10, 11</details></div></div>
+
+<div class="s" data-t="2.1"><h2 class="a">Statements and translation</h2><div class="g">
+<div class="c a"><b>Statement</b><div class="m">A declarative sentence that is true or false, not both. Questions, commands and "x + 4 &gt; 9" are not statements.</div></div>
+<div class="c a"><b>Translate</b><div class="m">p but q: p∧q<br>neither p nor q: ~p∧~q<br>either p or q, not both: p⊕q<br>if p then q: p→q</div></div>
+</div></div>
+
+<div class="s" data-t="2.1">
+<h2 class="a">The connectives</h2>
+<p class="sub a" style="max-width:none;margin:0 0 12px">A connective joins statements into a new statement.</p>
+<table class="m a" style="--i:1"><thead><tr><th>p</th><th>q</th><th>p∧q</th><th>p∨q</th><th>p⊕q</th><th>p→q</th><th>p↔q</th><th>p↑q</th><th>p↓q</th></tr></thead><tbody>
+<tr><td>T</td><td>T</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="F">F</td></tr>
+<tr><td>T</td><td>F</td><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="F">F</td><td class="T">T</td><td class="F">F</td></tr>
+<tr><td>F</td><td>T</td><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="T">T</td><td class="F">F</td><td class="T">T</td><td class="F">F</td></tr>
+<tr><td>F</td><td>F</td><td class="F">F</td><td class="F">F</td><td class="F">F</td><td class="T">T</td><td class="T">T</td><td class="T">T</td><td class="T">T</td></tr></tbody></table>
+<p class="sub a" id="cp" style="max-width:none;margin:16px 0 8px">Click on the column to explain</p>
+<div id="cx" class="a"></div>
+</div>
+
+<div class="s" data-t="2.1"><h2 class="a">Truth tables and equivalence</h2><div class="g">
+<div class="c a"><b>How to build one</b><br>1. List all n rows (eg. p, q, r) having 2ⁿ elements.<br>2. One column per sub-expression, innermost first.<br>3. Last column is the answer.</div>
+<div class="c a"><b>Equivalent (≡)</b><br>Same value in every row. Prove with matching final columns; disprove with one differing row.</div>
+<div class="c a" style="grid-column:1;padding:8px 14px"><b>Order of operations</b>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin-top:4px"><div class="ord" style="margin:0"><div class="ol" style="border-color:rgba(92,195,209,1)"><span class="m">( )</span><i>brackets</i></div><span class="oa">▸</span><div class="ol" style="border-color:rgba(92,195,209,.85)"><span class="m">~</span><i>not</i></div><span class="oa">▸</span><div class="ol" style="border-color:rgba(92,195,209,.7)"><span class="m">∧ ∨</span><i>and, or (same level)</i></div><span class="oa">▸</span><div class="ol" style="border-color:rgba(92,195,209,.55)"><span class="m">→</span><i>if then</i></div><span class="oa">▸</span><div class="ol" style="border-color:rgba(92,195,209,.4)"><span class="m">↔</span><i>if and only if</i></div></div>
+<div style="border-left:2px solid #27405c;padding-left:14px;font-size:.78em;line-height:1.35"><div class="m">p ∨ ~q → ~p<br>p ∨ <span class="og">(</span>~q<span class="og">)</span> → <span class="og">(</span>~p<span class="og">)</span> &nbsp;<span style="color:var(--mute)"></span><br><span class="og">(</span>p ∨ (~q)<span class="og">)</span> → (~p) &nbsp;<span style="color:var(--mute)"></span></div></div></div></div></div>
+<table class="m sm a" id="t3"></table></div>
+
+<div class="s" data-t="2.1"><h2 class="a">Tautology, contradiction, contingency</h2><div class="g">
+<div class="c a"><b>Tautology t</b><br>Always true, in every row.<div class="m">p∨~p</div></div>
+<div class="c a"><b>Contradiction c</b><br>Always false, in every row.<div class="m">p∧~p</div></div>
+<div class="c a"><b>Contingency</b><br>Sometimes true, sometimes false.<div class="m">p∧q</div></div></div></div>
+
+<div class="s" data-t="2.1"><h2 class="a">The laws of logic</h2><div class="c a"><table data-rows><thead><tr><th>Law</th><th>Form 1</th><th>Form 2</th></tr></thead><tbody><tr><td><b>Commutative</b></td><td class="m">p∧q ≡ q∧p</td><td class="m">p∨q ≡ q∨p</td></tr><tr><td><b>Associative</b></td><td class="m">(p∧q)∧r ≡ p∧(q∧r)</td><td class="m">(p∨q)∨r ≡ p∨(q∨r)</td></tr><tr><td><b>Distributive</b></td><td class="m">p∧(q∨r) ≡ (p∧q)∨(p∧r)</td><td class="m">p∨(q∧r) ≡ (p∨q)∧(p∨r)</td></tr><tr><td><b>Identity</b></td><td class="m">p∧t ≡ p</td><td class="m">p∨c ≡ p</td></tr><tr><td><b>Negation</b></td><td class="m">p∨~p ≡ t</td><td class="m">p∧~p ≡ c</td></tr><tr><td><b>Double negation</b></td><td class="m">~(~p) ≡ p</td><td></td></tr><tr><td><b>Idempotent</b></td><td class="m">p∧p ≡ p</td><td class="m">p∨p ≡ p</td></tr><tr><td><b>Universal bound</b></td><td class="m">p∨t ≡ t</td><td class="m">p∧c ≡ c</td></tr><tr><td><b>De Morgan</b></td><td class="m">~(p∧q) ≡ ~p∨~q</td><td class="m">~(p∨q) ≡ ~p∧~q</td></tr><tr><td><b>Absorption</b></td><td class="m">p∨(p∧q) ≡ p</td><td class="m">p∧(p∨q) ≡ p</td></tr><tr><td><b>Negations of t and c</b></td><td class="m">~t ≡ c</td><td class="m">~c ≡ t</td></tr></tbody></table></div><p class="sub a">F plays the role of c (always false) and T the role of t (always true).</p></div>
+
+<div class="s" data-t="2.1"><h2 class="a">Example questions</h2><div class="g"><div class="c a"><b>Simplify p∨~(~p∧q)</b><table class="sm"><thead><tr><th>Step</th><th>Law</th></tr></thead><tbody><tr><td class="m">p∨~(~p∧q)</td><td>given</td></tr><tr><td class="m">≡ p∨(~(~p)∨~q)</td><td>De Morgan</td></tr><tr><td class="m">≡ p∨(p∨~q)</td><td>Double negation</td></tr><tr><td class="m">≡ (p∨p)∨~q</td><td>Associative</td></tr><tr><td class="m">≡ p∨~q</td><td>Idempotent</td></tr></tbody></table></div><div class="c a"><b>Verify ~(~p∧q)∧(p∨q) ≡ p</b><table class="sm"><thead><tr><th>Step</th><th>Law</th></tr></thead><tbody><tr><td class="m">~(~p∧q)∧(p∨q)</td><td>given</td></tr><tr><td class="m">≡ (~(~p)∨~q)∧(p∨q)</td><td>De Morgan</td></tr><tr><td class="m">≡ (p∨~q)∧(p∨q)</td><td>Double negation</td></tr><tr><td class="m">≡ p∨(~q∧q)</td><td>Distributive (reverse)</td></tr><tr><td class="m">≡ p∨c</td><td>Negation</td></tr><tr><td class="m">≡ p</td><td>Identity</td></tr></tbody></table></div><div class="c a"><b>Translate, then reverse-distribute</b><p class="sm">“A if hardworking and sun, or hardworking and rain”: (p∧q)∨(p∧r) ≡ p∧(q∨r). So: hardworking and (sun or rain).</p><b>Check two claims</b><p class="sm">p∨(p∧q) ≡ p? Yes (Absorption).<br>p∧c ≡ p∨c? No: p∧c ≡ c but p∨c ≡ p.</p></div></div><p class="sub a">One step per line, name every law.</p></div>
+
+<div class="s" data-t="2.2"><h2 class="a">If p then q is a promise</h2><div class="g">
+<div class="c v a"><b>A earned, computer bought</b><div class="big">T</div>Promise kept.</div>
+<div class="c x a"><b>A earned, no computer</b><div class="big">F</div>Promise broken.</div>
+<div class="c a"><b>No A, computer or not</b><div class="big">T</div>Vacuously true: nothing was promised.</div></div>
+<p class="sub a">p is the hypothesis, q the conclusion. If 1=1 then 3=3: T. If 1=1 then 2=3: F. If 1=0 then 3=3: T. If 1=2 then 2=3: T.</p></div>
+
+<div class="s" data-t="2.2">
+<h2 class="a">Conditionals, flipped four ways</h2>
+<div class="g">
+<div class="c a" style="--i:1"><b>Original</b><div class="big">p → q</div></div>
+<div class="c v a" style="--i:2"><b>Contrapositive: equivalent</b><div class="big">~q → ~p</div></div>
+<div class="c x a" style="--i:3"><b>Converse: not equivalent</b><div class="big">q → p</div></div>
+<div class="c x a" style="--i:4"><b>Inverse: not equivalent</b><div class="big">~p → ~q</div></div></div>
+<div class="g" style="margin-top:14px">
+<div class="c a" style="--i:5">"p <b>only if</b> q" means p→q</div>
+<div class="c a" style="--i:6">r <b>sufficient</b> for s: r→s</div>
+<div class="c a" style="--i:7">r <b>necessary</b> for s: s→r</div></div>
+</div>
+
+<div class="s" data-t="2.2"><h2 class="a">Negations, translations, worked table</h2><div class="g">
+<div class="c a"><b>Negate an if-then</b><br>If Ali lives in Pakistan then he lives in Lahore: Ali lives in Pakistan and not in Lahore.<br>If x is prime then x is odd or x = 2: x is prime, not odd and not 2.</div>
+<div class="c a"><b>Only if, iff</b><br>p↔q ≡ (p→q)∧(q→p) ≡ ~(p⊕q). Also p→q: p implies q, q if p, q whenever p, not p unless q.</div>
+<div class="c a"><b>Translate</b> (p final A, q every exercise, r class A)<br>Necessary to get final A: r→p<br>p and q is sufficient: p∧q→r</div></div>
+<table class="m sm a"><thead><tr><th>p</th><th>q</th><th>~q</th><th>p∨~q</th><th>~p</th><th>(p∨~q)→~p</th></tr></thead><tbody><tr><td>T</td><td>T</td><td>F</td><td>T</td><td>F</td><td><b>F</b></td></tr><tr><td>T</td><td>F</td><td>T</td><td>T</td><td>F</td><td><b>F</b></td></tr><tr><td>F</td><td>T</td><td>F</td><td>F</td><td>T</td><td><b>T</b></td></tr><tr><td>F</td><td>F</td><td>T</td><td>T</td><td>T</td><td><b>T</b></td></tr></tbody></table></div>
+
+<div class="s" data-t="2.3"><h2 class="a">Validity and the critical-row test</h2><div class="g">
+<div class="c a"><b>Argument:</b> premises, then a conclusion (∴). <b>Valid:</b> whenever all premises are true, so is the conclusion. Form, not real-world truth.</div>
+<div class="c a"><b>Sound:</b> valid with true premises. <b>Invalid:</b> some row has true premises and a false conclusion.</div>
+<div class="c a"><b>Critical rows</b><br>1. A column per premise and the conclusion.<br>2. Mark rows where all premises are true.<br>3. Conclusion true in all of them: valid.</div></div>
+<table class="m sm a"><thead><tr><th>p</th><th>q</th><th>p→q</th><th>q</th><th>∴ p</th></tr></thead><tbody><tr><td>T</td><td>T</td><td>T</td><td>T</td><td>T</td></tr><tr><td>T</td><td>F</td><td>F</td><td>F</td><td>T</td></tr><tr><td>F</td><td>T</td><td>T</td><td>T</td><td><b>F</b></td></tr><tr><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr></tbody></table><p class="sub a">Rows 1 and 3 are critical. Row 3 has a false conclusion, so p→q, q ∴ p is invalid.</p></div>
+
+<div class="s" data-t="2.3">
+<h2 class="a">Valid or invalid?</h2>
+<p class="sub a" style="--i:1">Valid: whenever all premises are true, the conclusion is true. Check the critical rows.</p>
+<div class="g">
+<div class="c v a" style="--i:2"><b>Modus ponens</b><div class="big">p→q, p ∴ q</div></div>
+<div class="c v a" style="--i:3"><b>Modus tollens</b><div class="big">p→q, ~q ∴ ~p</div></div>
+<div class="c x a" style="--i:4"><b>Converse error</b><div class="big">p→q, q ∴ p</div>Wet road, so rain? A garden hose.</div>
+<div class="c x a" style="--i:5"><b>Inverse error</b><div class="big">p→q, ~p ∴ ~q</div>No win, so no party? Maybe.</div></div>
+<p class="sub a" style="--i:6">Also valid: elimination, transitivity, generalization, specialization, conjunction, cases.</p>
+</div>
+
+<div class="s" data-t="2.3"><h2 class="a">Rules of inference</h2>
+<table class="m sm a" style="margin-bottom:12px"><thead><tr><th style="text-align:left">Rule</th><th>Premises</th><th>∴ Conclusion</th></tr></thead><tbody><tr><td style="text-align:left"><b>Modus ponens</b></td><td>p→q; p</td><td>q</td></tr><tr><td style="text-align:left"><b>Modus tollens</b></td><td>p→q; ~q</td><td>~p</td></tr><tr><td style="text-align:left"><b>Generalization</b></td><td>p</td><td>p∨q</td></tr><tr><td style="text-align:left"><b>Specialization</b></td><td>p∧q</td><td>p</td></tr><tr><td style="text-align:left"><b>Conjunction</b></td><td>p; q</td><td>p∧q</td></tr><tr><td style="text-align:left"><b>Elimination</b></td><td>p∨q; ~q</td><td>p</td></tr><tr><td style="text-align:left"><b>Transitivity</b></td><td>p→q; q→r</td><td>p→r</td></tr><tr><td style="text-align:left"><b>Cases</b></td><td>p∨q; p→r; q→r</td><td>r</td></tr><tr><td style="text-align:left"><b>Contradiction</b></td><td>~p→c</td><td>p</td></tr></tbody></table>
+<div class="g">
+<div class="c a"><b>Valid chain</b> p→q, q→r, ~r: modus tollens on q→r gives ~q, then on p→q gives ~p.</div>
+<div class="c a"><b>Deductive</b> reasoning guarantees the conclusion (all humans are mortal; Socrates is human). <b>Inductive</b> is only probable.</div></div></div>
+
+<div class="s" data-t="3.1"><h2 class="a">Predicates and domains</h2><div class="g">
+<div class="c a"><b>Predicate</b><br>A sentence with variables that becomes a statement when values are substituted. P(x): "x is even."</div>
+<div class="c a"><b>Domain D</b><br>Values the variable can take: ℤ integers, ℚ rationals, ℝ reals, ℤ⁺.</div>
+<div class="c a"><b>Truth set</b><br>All x in D that make P(x) true.</div>
+<div class="c a"><b>∀x∈D, P(x)</b>: every x works.<br><b>∃x∈D such that P(x)</b>: at least one works.</div></div>
+<p class="sub a">In 2x + y = 0, 2 and 0 are constants, x and y are variables, and the whole equation is an expression.</p></div>
+
+<div class="s" data-t="3.1">
+<h2 class="a">∀ needs every one, ∃ needs just one</h2>
+<div class="dots a" style="--i:1" id="dots"></div>
+<div class="a" style="--i:2"><button class="btn" data-m="all">∀ true</button><button class="btn" data-m="one">∀ false: one counterexample</button><button class="btn" data-m="ex">∃ true: one witness</button><button class="btn" data-m="none">∃ false: no element works</button></div>
+<p id="dsay" class="sub a" style="--i:3">Pick a case.</p>
+<div class="g">
+<div class="c a" style="--i:4"><b>Negate</b><div class="m">~∀x P(x) ≡ ∃x ~P(x)<br>~∃x P(x) ≡ ∀x ~P(x)<br>~∀x(P→Q) ≡ ∃x(P∧~Q)</div></div>
+<div class="c a" style="--i:5">"All are" negates to "at least one is not", never "none". Universals use →, existentials use ∧.</div></div>
+</div>
+
+<div class="s" data-t="3.1"><h2 class="a">Conditionals, negation and scope</h2><div class="g">
+<div class="c a"><b>Universal conditional</b><br>∀x, P(x)→Q(x). False if P true and Q false for some x; vacuously true where P is false. Existentials use ∧: ∃x P(x)∧Q(x).</div>
+<div class="c a"><b>Negate</b><br>All mathematicians wear glasses: some mathematician does not.<br>Some dogs have wings: no dog has wings.<br>If x is prime then x is odd: some prime x is not odd (x=2).</div>
+<div class="c a"><b>Forms</b><br>"All squares are rectangles" = ∀x, Square(x)→Rectangle(x). "No dogs have wings" = ∀x, Dog(x)→~Wings(x).</div>
+<div class="c a"><b>Scope</b><br>x in ∀x P(x) is bound; renaming it changes nothing. A free variable makes a predicate, not a statement. "x² ≥ 0" in a theorem means for all x.</div>
+<div class="c a"><b>Tarski's world</b><br>For ∀ find one counterexample, for ∃ one witness. Check the domain first.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Negating ∀ and ∃</h2><div class="g">
+<div class="c a"><b>Negate “for all”</b><div class="m">~(∀x ∈ D, Q(x)) ≡ ∃x ∈ D such that ~Q(x)</div>“All are” becomes “at least one is not”.</div>
+<div class="c a"><b>Negate “there exists”</b><div class="m">~(∃x ∈ D such that Q(x)) ≡ ∀x ∈ D, ~Q(x)</div>“Some are” becomes “none are” (all are not).</div>
+<div class="c a"><b>Examples</b><br>All mathematicians wear glasses → there is a mathematician who does not.<br>Some snowflakes are the same → no two snowflakes are the same.</div>
+<div class="c x a"><b>Caution</b><br>“All mathematicians do not wear glasses” is ambiguous. It can mean “none do”, which is stronger than the true negation. Say “some … do not”.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Negations: worked examples</h2><div class="g">
+<div class="c a"><b>a.</b> ∀ primes p, p is odd.<div class="m">∃ a prime p such that p is not odd.</div>(p = 2)</div>
+<div class="c a"><b>b.</b> ∃ a triangle T whose angles sum to 200°.<div class="m">∀ triangles T, the angles of T do not sum to 200°.</div></div>
+<div class="c a"><b>c.</b> No politicians are honest.<div class="m">Formal: ∀ politician x, x is not honest.<br>Negation: ∃ a politician x such that x is honest.</div>Informally: some politicians are honest.</div>
+<div class="c v a"><b>Method</b><br>Rewrite formally, then apply the rule. Or ask: “What exactly would make this false?”</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Negating a universal conditional</h2><div class="g">
+<div class="c a"><b>Rule</b><div class="m">~(∀x, P(x) → Q(x)) ≡ ∃x such that P(x) ∧ ~Q(x)</div>It follows from ~(P → Q) ≡ P ∧ ~Q.</div>
+<div class="c a"><b>Example 1</b><div class="m">∀ person p, if p is blond then p has blue eyes.</div>Negation: some person is blond and does not have blue eyes.</div>
+<div class="c a"><b>Example 2</b><div class="m">If a program has more than 100,000 lines, then it has a bug.</div>Negation: some program has more than 100,000 lines and has no bug.</div></div>
+<p class="sub a" style="max-width:none">The negation of “if … then” is “… and not …”, never another “if … then”.</p></div>
+
+<div class="s" data-t="3.2"><h2 class="a">∀ is a big AND, ∃ is a big OR</h2><div class="g">
+<div class="c a"><b>Finite domain D = {x₁, …, xₙ}</b><div class="m">∀x ∈ D, Q(x) ≡ Q(x₁) ∧ Q(x₂) ∧ … ∧ Q(xₙ)<br>∃x ∈ D, Q(x) ≡ Q(x₁) ∨ Q(x₂) ∨ … ∨ Q(xₙ)</div></div>
+<div class="c a"><b>Example, D = {0, 1}</b><div class="m">∀x, x·x = x ≡ (0·0 = 0) ∧ (1·1 = 1)<br>∃x, x + x = x ≡ (0 + 0 = 0) ∨ (1 + 1 = 1)</div></div>
+<div class="c v a"><b>So the negation rules are De Morgan</b><br>~(AND) is OR of the negations, and ~(OR) is AND of the negations. That is why ∀ flips to ∃ and ∃ flips to ∀.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Vacuous truth</h2><div class="g">
+<div class="c a"><b>The bowl</b><br>“All the balls in the bowl are blue.” If the bowl is empty, is it true?<br>Its negation is “some ball in the bowl is not blue”. There is no such ball, so the negation is false and the original is true by default.</div>
+<div class="c a"><b>Definition</b><div class="m">∀x ∈ D, if P(x) then Q(x)</div>is vacuously true when P(x) is false for every x in D.</div>
+<div class="c x a"><b>Watch out</b><br>In maths, “in general” means “always”, not “usually”.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Converse, inverse, contrapositive</h2>
+<p class="sub a" style="max-width:none;margin:0 0 12px">Start from: ∀x ∈ ℝ, if x &gt; 2 then x² &gt; 4. This is true.</p><div class="g">
+<div class="c v a"><b>Contrapositive</b><div class="m">∀x, if x² ≤ 4 then x ≤ 2</div>Always equivalent to the original.</div>
+<div class="c x a"><b>Converse</b><div class="m">∀x, if x² &gt; 4 then x &gt; 2</div>Not equivalent. False: x = −3.</div>
+<div class="c x a"><b>Inverse</b><div class="m">∀x, if x ≤ 2 then x² ≤ 4</div>Not equivalent. False: x = −3.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Necessary, sufficient, only if</h2><table class="m a" style="--i:1"><thead><tr><th>Phrase</th><th>Means</th></tr></thead><tbody>
+<tr><td>r(x) is sufficient for s(x)</td><td>∀x, if r(x) then s(x)</td></tr>
+<tr><td>r(x) is necessary for s(x)</td><td>∀x, if s(x) then r(x)</td></tr>
+<tr><td>r(x) only if s(x)</td><td>∀x, if r(x) then s(x)</td></tr></tbody></table>
+<div class="g" style="margin-top:12px">
+<div class="c a">Squareness is sufficient for rectangularity: if a figure is a square, then it is a rectangle.</div>
+<div class="c a">Age 35 is necessary to be president: if x is president, then x is at least 35.</div>
+<div class="c a">A product is 0 only if a factor is 0: if the product is 0, then one number is 0.</div></div></div>
+
+<div class="s" data-t="3.2"><h2 class="a">Try it</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. Negate “All dogs are loyal”.</summary>Some dog is not loyal. (Not “no dogs are loyal”.)</details>
+<details class="a"><summary>2. Negate “Some computer hackers are over 40”.</summary>No computer hacker is over 40. Or: all hackers are 40 or under.</details>
+<details class="a"><summary>3. Negate “If a number is prime, then it is odd”.</summary>Some prime is not odd, for example 2.</details>
+<details class="a"><summary>4. Contrapositive of “If a number is greater than 2 then its square is greater than 4”?</summary>If the square of a number is at most 4, then the number is at most 2.</details>
+<details class="a"><summary>5. Rewrite “Being a square is sufficient for being a rectangle”.</summary>For every figure x, if x is a square then x is a rectangle.</details>
+<details class="a"><summary>6. Is “all unicorns in this room are blue” true if there are none?</summary>Yes, vacuously true. No unicorn exists to make it false.</details></div></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Four words to know</h2><div class="g">
+<div class="c a"><b>Even</b><div class="m">n = 2k<br>twice some integer<br>0, 14, −6</div></div>
+<div class="c a"><b>Odd</b><div class="m">n = 2k + 1<br>twice an integer, plus 1<br>7, −301</div></div>
+<div class="c a"><b>Prime</b><br>n &gt; 1 and the only positive factors are 1 and n.<div class="m">2, 3, 5, 7, 11, 13</div></div>
+<div class="c a"><b>Composite</b><br>n &gt; 1 and n = r·s with 1 &lt; r, s &lt; n.<div class="m">4, 6, 8, 9, 10, 12</div></div></div>
+<p class="sub a" style="max-width:none">Definitions work both ways: if n is even you may write n = 2k, and if n = 2k then n is even. 1 is not prime. Sums, differences and products of integers are integers.</p></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Direct proof in 5 steps</h2><div class="g">
+<div class="c a"><b>1. Rewrite</b><br>“For every x, if P then Q.”</div>
+<div class="c a"><b>2. Suppose</b><br>Take any x with P true. Any x means no special choice.</div>
+<div class="c a"><b>3. Unpack</b><br>Turn words into formulas with the definition (even → 2k).</div>
+<div class="c a"><b>4. Algebra</b><br>Substitute, multiply out, factor.</div>
+<div class="c a"><b>5. Finish</b><br>Name the result as an integer, then use the definition: “so it is even, as was to be shown.”</div>
+<div class="c x a"><b>Watch out</b><br>Use a new letter for each unknown: m = 2r and n = 2s. Writing n = 2r forces m = n.</div></div></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Example: even + even is even</h2>
+<div class="g">
+<div class="c a"><b>Claim</b><br>The sum of any two even integers is even.</div>
+<div class="c v a"><b>Proof</b><br>Suppose m and n are any even integers. By definition, m = 2r and n = 2s for some integers r and s.
+<div class="m" style="margin:8px 0">m + n = 2r + 2s<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 2(r + s)</div>
+Let t = r + s. It is an integer because it is a sum of integers. So m + n = 2t, which is even by definition. ∎</div></div></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Disprove with a counterexample</h2><div class="g">
+<div class="c a"><b>The rule</b><br>To show “for all x, if P then Q” is false, find one x where P is true and Q is false. One is enough.</div>
+<div class="c x a"><b>Statement</b><br>For all real a and b, if a² = b² then a = b.</div>
+<div class="c v a"><b>Counterexample</b><br>a = 1, b = −1. Then a² = 1 = b², so P is true. But 1 ≠ −1, so Q is false. The statement is false.</div>
+<div class="c a"><b>Tip</b><br>Stuck proving something? Try negatives, zero and equal values to hunt for a counterexample.</div></div></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Other ways to prove</h2><div class="g">
+<div class="c a"><b>Prove ∃ (exists)</b><br>Give one example. 10 is even and 10 = 5 + 5 = 3 + 7, two ways as a sum of primes.</div>
+<div class="c a"><b>Exhaustion</b><br>If there are only a few cases, check each one. Every even n from 4 to 26 is a sum of two primes: 4 = 2 + 2, 6 = 3 + 3, 8 = 3 + 5 …</div>
+<div class="c a"><b>When exhaustion fails</b><br>Infinitely many cases, so use a direct proof with a generic x.</div></div></div>
+
+<div class="s" data-t="4.1"><h2 class="a">Try it</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. Is 6a²b even (a, b integers)?</summary>Yes. 6a²b = 2(3a²b) and 3a²b is an integer.</details>
+<details class="a"><summary>2. Is 1 prime?</summary>No. A prime must be greater than 1.</details>
+<details class="a"><summary>3. Disprove: if n is even then n² + 1 is prime.</summary>n = 8: 8² + 1 = 65 = 5·13, not prime.</details>
+<details class="a"><summary>4. Prove: the sum of two odd integers is even.</summary>m = 2r + 1, n = 2s + 1. Then m + n = 2(r + s + 1), which is even.</details>
+<details class="a"><summary>5. Prove: if n is odd then n² is odd.</summary>n = 2k + 1. n² = 4k² + 4k + 1 = 2(2k² + 2k) + 1, which is odd.</details></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Rules for writing a proof</h2><div class="g">
+<div class="c a"><b>1. Copy the theorem</b><br>Write the statement first.</div>
+<div class="c a"><b>2. Mark “Proof”</b><br>Begin with the word Proof.</div>
+<div class="c a"><b>3. Be self-contained</b><br>Introduce every variable and say what kind of object it is: “Suppose m and n are any even integers.”</div>
+<div class="c a"><b>4. Full sentences</b><br>Symbols are fine inside sentences. Read the first = as “equals”, later ones as “which equals”.</div>
+<div class="c a"><b>5. Show the status</b><br>Say what is assumed (“Suppose”) and what is still to be shown (“We must show that”).</div>
+<div class="c a"><b>6. Give a reason</b><br>Every step: by hypothesis, by definition of even, by substitution, by theorem 4.1.1.</div>
+<div class="c a"><b>7. Little words</b><br>Because, Since, Then, Thus, Hence, So. Use Observe that or Recall that for a side fact.</div>
+<div class="c a"><b>8. Display equations</b><br>Put equations on their own lines, with space.</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Words that keep a proof clear</h2><div class="g">
+<div class="c a"><b>Assumed</b><div class="m">Suppose … / Assume … / Let x be …</div></div>
+<div class="c a"><b>To be shown</b><div class="m">We must show that … / In other words, we must show …</div></div>
+<div class="c a"><b>Follows from before</b><div class="m">Then … by substitution<br>Hence … by definition of odd</div></div>
+<div class="c a"><b>New side fact</b><div class="m">Note that … / Observe that … / Recall that …</div></div>
+<div class="c a"><b>New variable</b><div class="m">Let t = r + s.</div>New name on the left, its definition on the right. Use “Let”.</div>
+<div class="c v a"><b>Rule of thumb</b><br>A reader should never be unsure whether a line is assumed, established, or still to be deduced.</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Common mistakes (1 to 4)</h2><div class="g">
+<div class="c x a"><b>1. Arguing from examples</b><br>“m = 14 and n = 6, and 14 + 6 = 20 is even” does not prove it for all even m and n. Use an arbitrary m and n.</div>
+<div class="c x a"><b>2. One letter, two meanings</b><br>“m = 2k + 1 and n = 2k + 1” forces m = n. Use a new letter: n = 2s + 1.</div>
+<div class="c x a"><b>3. Jumping to a conclusion</b><br>After m + n = 2r + 2s, saying “so it is even” is not enough. Show it equals 2(r + s) with r + s an integer.</div>
+<div class="c x a"><b>4. Assuming what is to be proved</b><br>“When odd integers are multiplied, their product is odd. Hence mn is odd.” That is the claim itself.</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Common mistakes (5 to 7)</h2><div class="g">
+<div class="c x a"><b>5. Known vs still to show</b><br>Do not write “there exists s with mn = 2s + 1” as if true. You only know s exists once mn is shown odd. Write “we must show there exists s”. Do not introduce a variable unless it comes from the hypothesis.</div>
+<div class="c x a"><b>6. “any” instead of “some”</b><br>“m = 2a + 1 for any integer a” is wrong, since a must equal (m − 1)/2. Write “for some integer a”.</div>
+<div class="c x a"><b>7. “if” instead of “because”</b><br>“Suppose p is prime. If p is prime, then …” treats it as doubtful. Write “Because p is prime, …”.</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Model proof</h2><div class="g">
+<div class="c a"><b>Theorem</b><br>The difference of any odd integer and any even integer is odd.<br><br><b>Rewrite</b><br>For all integers a and b, if a is odd and b is even then a − b is odd.</div>
+<div class="c v a"><b>Proof</b><br>Suppose a is any odd integer and b is any even integer. We must show a − b is odd.<br>By definition, a = 2r + 1 and b = 2s for some integers r and s. Then
+<div class="m" style="margin:6px 0">a − b = (2r + 1) − 2s   substitution<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 2r − 2s + 1   like terms<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 2(r − s) + 1   factor 2</div>
+Let t = r − s. It is an integer because it is a difference of integers. So a − b = 2t + 1, which is odd by definition. ∎</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Spot the mistake, disprove an ∃</h2><div class="g">
+<div class="c x a"><b>Bad proof</b><br>Claim: if n is even then (−1)ⁿ = 1.<div class="m">n = 2a, so (−1)ⁿ = ((−1)ᵃ)²,<br>= 1 “because a square is positive”.</div>Mistake: a jump. A square of a nonzero real is positive, but that does not show ((−1)ᵃ)² equals 1.</div>
+<div class="c a"><b>Disprove an ∃ statement</b><br>“There is a positive integer n with n² + 3n + 2 prime.” Prove the negation (a ∀ statement) with a generic n.<div class="m">n² + 3n + 2 = (n + 1)(n + 2)</div>Both factors are integers greater than 1, so the number is never prime.</div></div></div>
+
+<div class="s" data-t="4.2"><h2 class="a">Try it</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. What is wrong with “m = 2k and n = 2k for integer k”?</summary>It makes m = n. Use different letters: m = 2r, n = 2s.</details>
+<details class="a"><summary>2. Is checking 4 + 6 = 10 a proof that an even plus an even is even?</summary>No. An example is not a proof for all cases.</details>
+<details class="a"><summary>3. Fix: “By definition of odd, m = 2a + 1 for any integer a.”</summary>Use “for some integer a”.</details>
+<details class="a"><summary>4. Fix: “Suppose p is prime. If p is prime, then p has only two factors.”</summary>“Because p is prime, p has only two positive factors.”</details>
+<details class="a"><summary>5. Show “there is a positive n with n² + 3n + 2 prime” is false.</summary>For every positive n, n² + 3n + 2 = (n + 1)(n + 2), a product of two integers greater than 1, so it is not prime.</details>
+<details class="a"><summary>6. Start and end a proof that an odd minus an even is odd.</summary>Start: Suppose a is odd and b is even. End: so a − b = 2t + 1, which is odd by definition.</details></div></div>
+
+<div class="s" data-t="Review"><h2 class="a">Ten things to write from memory</h2><div class="g">
+<div class="c a">1. Truth tables of ~ ∧ ∨ ⊕ → ↔ ↑ ↓<br>2. De Morgan<br>3. p→q ≡ ~p∨q<br>4. ~(p→q) ≡ p∧~q<br>5. Contrapositive ≡ original</div>
+<div class="c a">6. p only if q = p→q<br>7. p↔q ≡ (p→q)∧(q→p)<br>8. Valid: every critical row has a true conclusion<br>9. Converse and inverse errors<br>10. Negate ∀/∃: flip, negate predicate</div></div></div>
+
+<div class="s" data-t="Review"><h2 class="a">Self-test</h2><p class="sub a">Try each, then open the answer.</p><div class="g">
+<details class="a"><summary>1. Table of (p∨q)∧~(p∧q)?</summary>F, T, T, F: it is XOR, p⊕q.</details>
+<details class="a"><summary>2. Show ~(p∨(~p∧q)) ≡ ~p∧~q</summary>De Morgan, De Morgan and double negation, distributive, negation (c), identity.</details>
+<details class="a"><summary>3. Converse, inverse, contrapositive of "If it rains, the match is cancelled"</summary>Converse: if cancelled, it rains. Inverse: if no rain, not cancelled. Contrapositive: if not cancelled, no rain.</details>
+<details class="a"><summary>4. Negate "If Sara studies, she passes"</summary>Sara studies and does not pass.</details>
+<details class="a"><summary>5. Valid? p, p→q ∴ q. And q, p→q ∴ p.</summary>First valid (modus ponens). Second invalid (converse error).</details>
+<details class="a"><summary>6. Negate "Every student has a laptop"</summary>Some student does not have a laptop.</details></div></div>
+
+<div class="s" data-t="Review">
+<h2 class="a">Before you walk in</h2>
+<div class="g">
+<div class="c x a" style="--i:1"><b>Avoid</b><br>~(p∧q) as ~p∧~q<br>Converse as equivalent<br>p→q false when p is false<br>"Only if" as q→p<br>Wrong row count (2ⁿ)</div>
+<div class="c v a" style="--i:2"><b>Do</b><br>Add your own brackets<br>One column per sub-expression<br>Name the law on every step<br>Check the domain for ∀/∃</div></div>
+<p class="big a" style="--i:3;margin-top:.6em">Good luck.</p>
+</div>
+
+<div id="top"><div id="dd"><button id="dbtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Jump to topic"><span id="dlab"></span><span id="dcnt"></span><span class="ar" aria-hidden="true">▾</span></button><div id="dlist" role="listbox"></div></div></div>
+<div id="tn" hidden></div>
+<div id="nav"><div id="ar"><button id="pv" aria-label="Previous slide">‹</button><span id="cnt"></span><button id="nx" aria-label="Next slide">›</button></div></div>
+
+<script>
+(function(){
+var K={'1.1':'1.1 Variables','1.2':'1.2 Sets','2.1':'2.1 Logical form','2.2':'2.2 Conditionals','2.3':'2.3 Arguments','3.1':'3.1 Quantifiers','3.2':'3.2 Negation','4.2':'4.2 Writing proofs','Review':'Review'};
+function venn(m,l){var C='#5cc3d1',B='#0e1b2b',r=m=='nand'||m=='nor',cf=(m=='or'||m=='xor')?C:'none',s=' stroke="#eef2f7"',t=' fill="#eef2f7" stroke="'+B+'" stroke-width="3" style="paint-order:stroke" font-weight="700" font-size="16"';
+return'<div class="vn"><svg viewBox="0 0 200 120" width="190"><defs><clipPath id="c'+m+'"><circle cx="80" cy="60" r="38"/></clipPath></defs><rect x="2" y="2" width="196" height="116" rx="6" fill="'+(r?C:'none')+'" stroke="#9fb0c4"/><circle cx="80" cy="60" r="38" fill="'+(m=='nor'?B:cf)+'"'+s+'/><circle cx="120" cy="60" r="38" fill="'+(m=='nor'?B:cf)+'"'+s+'/>'+(m=='xor'||m=='nand'?'<circle cx="120" cy="60" r="38" fill="'+B+'"'+s+' clip-path="url(#c'+m+')"/>':'')+'<circle cx="80" cy="60" r="38" fill="none"'+s+'/><circle cx="120" cy="60" r="38" fill="none"'+s+'/><text x="55" y="65"'+t+'>p</text><text x="136" y="65"'+t+'>q</text></svg><span>'+l+'</span></div>'}
+function tb(h,r){return'<table class="m sm"><thead><tr><th>'+h.split(' ').join('</th><th>')+'</th></tr></thead><tbody>'+r.map(function(x){return'<tr>'+x.split('').map(function(c){return'<td class="'+(c=='T'||c=='1'?'T':'F')+'">'+c+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table>'}
+var X={
+'2.1':[
+['Statements: yes or no?',[`<b>Paris is the capital of France.</b> Yes (T). Declarative with a truth value.`,`<b>Can Ali come with you?</b> No. A question.`,`<b>Take two aspirins.</b> No. A command.`,`<b>x + 4 &gt; 9</b> No. True for x=6, false for x=5.`,`<b>He is a college student.</b> No. "He" is not identified.`,`Variables are p, q, r, s. Truth values are T/1 and F/0.`]],
+['Inclusive vs exclusive or',['!'+venn('or','Inclusive p∨q')+venn('xor','Exclusive p⊕q'),`<b>Inclusive:</b> at least one is true. "To register you must have passed the qualifying exam or be a Math major." Both is fine.`,`<b>Exclusive:</b> exactly one. "Nabeel has one or two brothers." He cannot have both.<br><code>p⊕q ≡ (p∨q)∧~(p∧q)</code>`]],
+['Memory aids',[`AND is true only when both are true.`,`OR is false only when both are false.`,`XOR is true when the two differ. It is the opposite of ↔.`,`p→q is false only when p is true and q is false. p↔q is true when they match.`,`NAND = NOT(AND). NOR = NOT(OR).`,`The three fundamental connectives are NOT, AND and OR. Everything else is built from them.`]],
+['English to symbols: lottery',[`"I did not buy a lottery ticket this week or I bought a lottery ticket and won the million on Friday."`,`Let p = I bought a ticket this week, q = I won on Friday.`,`<code>~p ∨ (p ∧ q)</code>`,`"p, although q" is p∧q. "Neither p nor q" is ~p∧~q.`]],
+['De Morgan: pictures and English',['!'+venn('nand','~(p∧q)')+venn('nand','~p ∨ ~q')+venn('nor','~(p∨q)')+venn('nor','~p ∧ ~q'),`<b>Rule:</b> to negate an AND or an OR, flip it to the other one and negate each part. Shaded regions are true; each pair of pictures is identical, which is what ≡ means.`,`<b>English examples (statement → negation)</b><br>Hal is a Math major and Hal's sister is a CS major → Hal is not a Math major or Hal's sister is not a CS major.`,`Sam is orange belt and Kate is red belt → Sam is not orange belt or Kate is not red belt.`,`The connector is loose or the machine is unplugged → the connector is not loose and the machine is not unplugged.`,`<b>Tautology proof:</b> ~(p∧q)∨(p∨q) ≡ (~p∨~q)∨(p∨q) ≡ (p∨~p)∨(q∨~q) ≡ t∨t ≡ t.`,`<b>Watch out:</b> ~(p∧q) is NOT ~p∧~q. Double negation: <code>~(~p) ≡ p</code>.`]],
+['More law examples',[`<b>Distributive in reverse:</b> "A if hardworking and the sun shines, or hardworking and it rains" is (p∧q)∨(p∧r) ≡ p∧(q∨r).`,`Is p∨(p∧q) ≡ p? Yes, absorption.`,`Is p∧c ≡ p∨c? No. p∧c ≡ c but p∨c ≡ p. They differ when p is true.`]]],
+'2.2':[
+['What p→q means',[`<b>In plain words:</b> p→q is a promise: "if p happens, then q will happen." p is the hypothesis, q is the conclusion.`,`<b>Only one way to break it:</b> p true and q false. Every other row keeps the promise.`,`<code>T→T = T<br>T→F = F<br>F→T = T<br>F→F = T</code>`,`<b>Why F→anything is true:</b> if p never happens, the promise was never tested, so it cannot be broken. This is called vacuously true.`,`<b>Implication law:</b> <code>p → q ≡ ~p ∨ q</code>. Read it as "either p doesn't happen, or q does." Use it to swap → for ∨ so the other laws apply.`,`<b>Check:</b> ~p∨q is false only when p is true and q is false, the same single false row as p→q.`]],
+['Negating an if-then',[`<b>Rule:</b> <code>~(p→q) ≡ p ∧ ~q</code>`,`<b>In plain words:</b> a promise is broken when p happens and q does not. So the negation says exactly that: p AND not q.`,`<b>Examples (statement → negation)</b><br>If my car is in the repair shop, then I cannot get to class → my car is in the repair shop and I can get to class.`,`If Ali lives in Pakistan then he lives in Lahore → Ali lives in Pakistan and not in Lahore.`,`If x is prime then x is odd or x = 2 → x is prime but not odd and not 2.`,`If n is divisible by 6, then n is divisible by 2 and 3 → n is divisible by 6 but not by 2 or not by 3.`,`<b>Proof:</b> ~(p→q) ≡ ~(~p∨q) [implication law] ≡ ~(~p)∧~q [De Morgan] ≡ p∧~q [double negation].`,`<b>Watch out:</b> the negation of an if-then is an AND statement, not another if-then.`]],
+['Converse, inverse, contrapositive in English',[`<b>Original:</b> If it is noon, then I am hungry.`,`<b>Converse:</b> If I am hungry, then it is noon.`,`<b>Inverse:</b> If it is not noon, then I am not hungry.`,`<b>Contrapositive:</b> If I am not hungry, then it is not noon.`,`Converse and inverse are equivalent to each other (each is the contrapositive of the other), not to the original.`,`Proof p→q ≡ ~q→~p: both columns read T, F, T, T.`]],
+['Only if and biconditional',[`<b>"p only if q"</b> means <code>p→q</code>. p can only be true when q is true, so p being true forces q.`,`<b>Do not flip it:</b> "You pass only if you study" means pass→study, NOT study→pass.`,`<b>"p if and only if q"</b> (iff, ↔) means both directions: <code>p↔q ≡ (p→q)∧(q→p)</code>.`,`True when p and q have the same truth value: <code>p↔q ≡ ~(p⊕q)</code>.`,`↔ is evaluated last: p∧q ↔ r means (p∧q) ↔ r.`]],
+['Sufficient and necessary',[`<b>Example:</b> r = you are in Lahore, s = you are in Pakistan. Then <code>r→s</code>.`,`<b>Sufficient</b> = enough on its own. Being in Lahore is enough to be in Pakistan, so r is sufficient for s. The sufficient thing goes on the <b>left</b> of the arrow.`,`<b>Necessary</b> = required. You cannot be in Lahore without Pakistan, so s is necessary for r. The necessary thing goes on the <b>right</b>.`,`<code>A is sufficient for B: A→B<br>A is necessary for B: B→A</code>`,`<b>Both:</b> A is necessary and sufficient for B means <code>A↔B</code>.`]],
+['Writing p→q in English',[`<b>All of these mean p→q:</b><br>if p then q · p implies q · q if p · q whenever p<br>p is sufficient for q<br>q is necessary for p<br>p only if q<br>not p unless q`,`<b>Practice (English → if-then)</b><br>Your guarantee is good only if you bought your CD less than 90 days ago → if your guarantee is good, then you bought it less than 90 days ago.`,`To get tenure it is sufficient to be world-famous → if you are world-famous, then you get tenure.`,`That you get the job implies you have the best credentials → if you get the job, then you have the best credentials.`,`It is necessary to walk 8 miles to get to the top → if you get to the top, then you walked 8 miles.`]],
+['Translation with letters',[`<b>Setup:</b> p = A on the final, q = every exercise done, r = A in the class.`,`Necessary to get an A on the final: <code>r→p</code>`,`Every exercise and an A on the final implies an A in the class (doing both is sufficient): <code>p∧q→r</code>`,`<b>Symbols to English</b> (p flu, q miss final, r pass): <code>~p∧~q→r</code> is "If you neither have the flu nor miss the final, you will pass."`]],
+['Worked table (p→q)∧(~p→r)',['!'+tb('p q r p→q ~p ~p→r result',['TTTTFTT','TTFTFTT','TFTFFTF','TFFFFTF','FTTTTTT','FTFTTFF','FFTTTTT','FFFTTFF']),`<b>Shortcut:</b> when p is true the result equals q; when p is false it equals r.`]]],
+'2.3':[
+['Definitions',[`An <b>argument</b> is premises (hypotheses) followed by a conclusion, written with ∴.`,`<b>Valid:</b> whenever all premises are true, the conclusion is true. It is about form, not real-life truth.`,`<b>Sound:</b> valid with true premises. A valid argument can still have a false conclusion if a premise is false.`,`<b>Invalid:</b> some assignment makes all premises true and the conclusion false.`]],
+['Critical-row method',[`1. Build the truth table: one column per premise and one for the conclusion.`,`2. Mark the critical rows: where ALL premises are true.`,`3. Conclusion true in every critical row = valid. Any false = invalid.`]],
+['Example: p→q, q ∴ p',['!'+tb('p q p→q q ∴p',['TTTTT','TFFFT','FTTTF','FFTFF']),`Critical rows are the first and third. In the third the premises are true but the conclusion is false: invalid (converse error).`]],
+['Modus ponens and tollens',[`<b>Modus ponens</b> p→q; p ∴ q. If it rains, the road is wet. It rains. ∴ The road is wet.`,`<b>Modus tollens</b> p→q; ~q ∴ ~p. If it rains, the road is wet. The road is not wet. ∴ It did not rain.`,`These are the only two safe moves: affirm the hypothesis, deny the conclusion.`]],
+['Generalization, specialization, conjunction',[`<b>Generalization</b> p ∴ p∨q (and q ∴ p∨q). I am at home ∴ I am at home or at work.`,`<b>Specialization</b> p∧q ∴ p (and ∴ q). It is cold and windy ∴ it is cold.`,`<b>Conjunction</b> p; q ∴ p∧q.`]],
+['Elimination, transitivity, cases, contradiction',[`<b>Elimination</b> p∨q; ~q ∴ p. The light is on or the power is out. The power is not out ∴ the light is on.`,`<b>Transitivity</b> p→q; q→r ∴ p→r.`,`<b>Division into cases</b> p∨q; p→r; q→r ∴ r.`,`<b>Contradiction rule</b> ~p→c ∴ p. If assuming ~p leads to a contradiction, p is true.`]],
+['Converse error',[`p→q; q ∴ p. Concluding the hypothesis from the conclusion.`,`The road is wet, so it rained? A garden hose, maybe.`,`Invalid: shown by the critical row p=F, q=T.`]],
+['Inverse error',[`p→q; ~p ∴ ~q. Denying the hypothesis.`,`"If the team wins, they celebrate. The team did not win. ∴ They did not celebrate." Invalid: they might celebrate for another reason.`]],
+['A valid chain',[`Premises: p→q, q→r, ~r.`,`1. Modus tollens on q→r gives ~q.`,`2. Modus tollens on p→q gives ~p.`,`3. Conclusion: ~p.`]],
+['Syllogism, deductive and inductive',[`All humans are mortal; Socrates is human; ∴ Socrates is mortal.`,`<b>Deductive:</b> the conclusion is guaranteed if the premises hold.`,`<b>Inductive:</b> the sun has risen every day, so it will rise tomorrow. Only probable.`]]],
+'3.1':[
+['Variables, constants, expressions',[`In 2x + y = 0: 2 and 0 are constants, x and y are variables, and the whole equation is an expression.`,`Symbols: ℤ integers, ℚ rationals p/q with q ≠ 0, ℝ reals.`]],
+['Truth set',[`The truth set of P(x) is all x in D that make P(x) true.`,`Example: P(x) is "x is even" over ℤ. The truth set is the even integers.`]],
+['Universal quantifier ∀',[`<code>∀x∈D, P(x)</code> reads for all, for every, for each, for any.`,`True if P(x) holds for every element (a general proof, or check every element of a small domain).`,`False if there is one counterexample.`,`∀x∈ℝ, x²≥0 is true. ∀x∈ℝ, x²&gt;0 is false: counterexample x=0.`]],
+['Existential quantifier ∃',[`<code>∃x∈D such that P(x)</code> reads there exists, there is, for some, for at least one.`,`True if you can find one witness. False only if P(x) is false for every x in D.`,`∃n∈ℤ⁺ such that n²=n is true (n=1).`]],
+['Deciding truth values',[`∀ true: every element works.`,`∀ false: one counterexample is enough.`,`∃ true: one witness is enough.`,`∃ false: no element works.`]],
+['Universal conditionals: symbols and English',[`<b>Most claims have the form</b> <code>∀x, P(x)→Q(x)</code>: "for every x, if P holds then Q holds."`,`<b>English → symbols</b><br>"All squares are rectangles", "Every square is a rectangle" and "If x is a square then x is a rectangle" all mean <code>∀x, Square(x)→Rectangle(x)</code>.`,`"If a real number is greater than 2, then its square is greater than 4" is <code>∀x∈ℝ, x&gt;2 → x²&gt;4</code>.`,`"No dogs have wings" is <code>∀x, Dog(x)→~Wings(x)</code>. "Some" means ∃.`,`<b>When it is false:</b> some x has P true and Q false (a counterexample).`,`<b>Vacuous truth:</b> x where P is false never count against the statement.`,`<b>Same thing:</b> "∀x∈D, P(x)" and "∀x, x∈D → P(x)".`]],
+['Existentials use AND',[`Existential statements are usually <code>∃x such that P(x)∧Q(x)</code>, with AND, not →.`,`Universal conditionals use →.`]],
+['Negating quantifiers',[`<b>Rule:</b> flip the quantifier (∀ ↔ ∃), then negate the predicate.`,`<code>~∀x P(x) ≡ ∃x ~P(x)</code>`,`<code>~∃x P(x) ≡ ∀x ~P(x)</code>`,`<b>In plain words:</b> "not everyone" means "someone doesn't". "Nobody" means "everyone doesn't".`,`<code>~∀x(P(x)→Q(x)) ≡ ∃x(P(x)∧~Q(x))</code> (uses ~(p→q) ≡ p∧~q from 2.2).`,`<b>Examples (statement → negation)</b><br>All mathematicians wear glasses → some mathematician does not wear glasses.`,`Some dogs have wings → no dog has wings.`,`Every student passed the quiz → at least one student did not pass.`,`Every even number is divisible by 4 → there is an even number not divisible by 4.`,`If x is prime then x is odd (for all x) → there is a prime x that is not odd (x=2).`,`<b>Watch out:</b> the negation of "all are" is NOT "all are not". It is "at least one is not".`]],
+['Bound, free, implicit',[`<b>Bound variable:</b> covered by a quantifier. In ∀x P(x), x is bound. The scope is the part the quantifier governs.`,`<b>Renaming is safe:</b> ∀x P(x) ≡ ∀y P(y).`,`<b>Free variable:</b> not covered by any quantifier. "x &gt; 3" with free x is a predicate, not a statement: it has no truth value until x is given.`,`<b>Implicit quantifier:</b> "x² ≥ 0" in a theorem means "for all x". "If x is a square then x is a rectangle" is universal too.`]],
+['Tarski\'s world',[`<b>What it is:</b> a picture of a grid with coloured shapes (triangles, squares, circles). You decide whether a quantified sentence is true of that picture.`,`<b>Example:</b> "All the triangles are blue" is ∀ triangles, blue. Check every triangle.`,`<b>For ∀:</b> look for one counterexample (a triangle that is not blue). Found one → false.`,`<b>For ∃:</b> look for one witness (a blue triangle). Found one → true.`,`<b>Exam tip:</b> check the domain first: all objects, or only the triangles?`]]
+],
+'Review':[
+['Common mistakes',[`Writing ~(p∧q) as ~p∧~q.`,`Treating the converse as equivalent to the original.`,`Making p→q false when p is false.`,`Forgetting "p only if q" is p→q, not q→p.`,`Negating "all" as "none".`,`Skipping the law name on a step.`,`Wrong number of rows: n variables need 2ⁿ rows.`]],
+['Test yourself: MCQs',['!<div id="mcq"></div>']]]};
+Object.keys(X).forEach(function(t){var l=[].filter.call(document.querySelectorAll('.s'),function(s){return s.dataset.t===t}).pop();
+l.insertAdjacentHTML('afterend',X[t].map(function(d){return'<div class="s" data-t="'+t+'"><h2 class="a">'+d[0]+'</h2><div class="g">'+d[1].map(function(x){return x[0]=='!'?'<div class="a row">'+x.slice(1)+'</div>':'<div class="c a">'+x+'</div>'}).join('')+'</div></div>'}).join(''))});
+})();
+</script>
+<script>
+(function(){
+var S=[].slice.call(document.querySelectorAll('.s')),i=0,cnt=document.getElementById('cnt'),dc=document.getElementById('dcnt'),swp=false,sn=false,bar=document.getElementById('bar');
+var MQ=matchMedia('(max-width:760px)');
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,k){s.classList.toggle('on',k===i)});
+var f=T.indexOf(T[i]),n=T.lastIndexOf(T[i])-f+1,j=i-f+1;cnt.textContent=j+' / '+n;dc.textContent=j+' / '+n;document.body.classList.toggle('sw',swp);if(i>0)sn=true;document.body.classList.toggle('h0',i===0&&!sn);mark();bar.style.width=(j/n*100)+'%';S[i].scrollTop=0;
+try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+document.getElementById('nx').onclick=function(){go(i+1)};document.getElementById('pv').onclick=function(){go(i-1)};
+document.addEventListener('keydown',function(e){if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT'||(e.target.tagName==='BUTTON'&&e.key===' '))return;
+if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();go(i+1)}else if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){go(i-1)}});
+var T=S.map(function(s){return s.dataset.t}),dd=document.getElementById('dd'),dbtn=document.getElementById('dbtn'),dl=document.getElementById('dlist'),dlab=document.getElementById('dlab');
+[['Intro','Intro'],['1.1','1.1 Variables'],['1.2','1.2 The language of sets'],['2.1','2.1 Logical form and equivalence'],['2.2','2.2 Conditional statements'],['2.3','2.3 Valid and invalid arguments'],['3.1','3.1 Predicates and quantifiers'],['3.2','3.2 Negating quantified statements'],['4.1','4.1 Direct proof and counterexample'],['4.2','4.2 Writing advice for proofs'],['Review','Review and self-test']].forEach(function(t){var b=document.createElement('button');b.type='button';b.setAttribute('role','option');b.dataset.v=t[0];b.textContent=t[1];b.onclick=function(){go(T.indexOf(t[0]));cl()};dl.appendChild(b)});
+function cl(){dd.classList.remove('open');dbtn.setAttribute('aria-expanded','false')}
+dbtn.onclick=function(e){e.stopPropagation();var o=!dd.classList.contains('open');dd.classList.toggle('open',o);dbtn.setAttribute('aria-expanded',String(o))};
+document.addEventListener('click',function(e){if(!dd.contains(e.target))cl()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cl()});
+function mark(){dlab.textContent=T[i];var tn=document.getElementById('tn'),tb=dl.querySelector('[data-v="'+T[i]+'"]');tn.textContent=tb?tb.textContent.replace(/^[\d.]+\s*/,''):'';tn.hidden=i!==T.indexOf(T[i])||T[i]==='Intro';document.body.classList.toggle('tf',!tn.hidden);[].forEach.call(dl.children,function(b){b.classList.toggle('on',b.dataset.v===T[i])})}
+S.forEach(function(s){[].forEach.call(s.querySelectorAll('.a'),function(e,k){e.style.setProperty('--i',k)})});
+var t3=document.getElementById('t3'),rw='',fv=function(v){return'<td class="'+(v?'T':'F')+'">'+(v?'T':'F')+'</td>'};
+for(var n=0;n<8;n++){var p=!(n&4),q=!(n&2),u=!(n&1),c=q||!u;rw+='<tr>'+[p,q,u,!p,!u,c,!p&&c].map(fv).join('')+'</tr>'}
+t3.innerHTML='<thead><tr><th>p</th><th>q</th><th>r</th><th>~p</th><th>~r</th><th>q∨~r</th><th>~p∧(q∨~r)</th></tr></thead><tbody>'+rw+'</tbody>';
+var tx=0,ty=0,dx=0,dg=0,md=0,sk=0,t0=0,W=0,cu=null,pk=null,busy=false;
+function hide(x){x.style.transition='none';x.style.transform='';x.classList.remove('pk');x.style.visibility='hidden';x.style.opacity='0';requestAnimationFrame(function(){requestAnimationFrame(function(){x.style.transition='';x.style.visibility='';x.style.opacity=''})})}
+function fin(c,n,k){swp=true;go(k);swp=false;hide(c);n.style.transition='none';n.style.transform='';n.classList.remove('pk');requestAnimationFrame(function(){requestAnimationFrame(function(){n.style.transition=''})})}
+document.addEventListener('touchstart',function(e){var t=e.touches[0];tx=t.clientX;ty=t.clientY;dx=0;dg=0;t0=Date.now();
+md=busy?0:!MQ.matches?2:(e.touches.length>1||e.target.closest('input,.ord,#dd'))?0:1},{passive:true});
+document.addEventListener('touchmove',function(e){if(md!==1)return;var t=e.touches[0],x=t.clientX-tx,y=t.clientY-ty;
+if(!dg){if(Math.abs(x)<8&&Math.abs(y)<8)return;if(Math.abs(y)>Math.abs(x)){md=0;return}dg=1;cu=S[i];W=innerWidth;sn=true;document.body.classList.remove('h0')}
+dx=x;var nb=S[dx<0?i+1:i-1];
+if(pk&&pk!==nb){hide(pk);pk=null}
+if(nb&&!pk){pk=nb;nb.scrollTop=0;nb.classList.add('pk');nb.style.transition='none'}
+cu.style.transition='none';cu.style.transform='translateX('+(nb?dx:dx/3)+'px)';
+if(pk)pk.style.transform='translateX('+(dx+(dx<0?W:-W))+'px)'},{passive:true});
+function end(e,cancel){
+if(md===2){if(!cancel){var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>60)go(i+(d<0?1:-1))}md=0;return}
+if(md!==1||!dg){md=0;return}
+md=0;dg=0;sk=Date.now();busy=true;
+var c=cu,n=pk,dir=dx<0?1:-1,v=Math.abs(dx)/Math.max(1,Date.now()-t0),tr='transform .26s cubic-bezier(.2,.7,.2,1)',
+ok=!cancel&&n&&(Math.abs(dx)>W*.28||(v>.45&&Math.abs(dx)>30));
+pk=null;c.style.transition=tr;if(n)n.style.transition=tr;
+if(ok){c.style.transform='translateX('+(-dir*W)+'px)';n.style.transform='translateX(0)';setTimeout(function(){fin(c,n,i+dir);busy=false},270)}
+else{c.style.transform='translateX(0)';if(n)n.style.transform='translateX('+(dir*W)+'px)';setTimeout(function(){c.style.transition='';c.style.transform='';if(n)hide(n);busy=false},270)}}
+document.addEventListener('touchend',function(e){end(e,false)});
+document.addEventListener('touchcancel',function(e){end(e,true)});
+document.addEventListener('click',function(e){if(Date.now()-sk<400){e.stopPropagation();e.preventDefault()}},true);
+[].forEach.call(document.querySelectorAll('.c[data-go]'),function(c){function f(e){if(e.type==='keydown'&&e.key!=='Enter')return;e.stopImmediatePropagation();go(T.indexOf(c.dataset.go))}c.addEventListener('click',f);c.addEventListener('keydown',f)});
+var h=parseInt((location.hash||'').slice(1),10);go(h>0?h-1:0);
+
+/* quantifier dots */
+var dots=document.getElementById('dots'),ds=document.getElementById('dsay'),D=[];
+for(var k=0;k<7;k++){var d=document.createElement('div');d.className='dot';d.textContent='P';dots.appendChild(d);D.push(d)}
+var msg={all:'∀x P(x) is TRUE: every element works.',one:'∀x P(x) is FALSE: one counterexample is enough.',ex:'∃x P(x) is TRUE: one witness is enough.',none:'∃x P(x) is FALSE: no element works.'};
+[].forEach.call(document.querySelectorAll('[data-m]'),function(b){b.onclick=function(){var m=b.dataset.m;
+D.forEach(function(d,k){d.className='dot'+(m==='one'&&k===3?' bad':'')+((m==='ex'&&k!==4)||m==='none'?' dim':'');d.textContent=((m==='one'&&k===3)||(m==='ex'&&k!==4)||m==='none')?'✗':'✓'});
+ds.textContent=msg[m]}});
+
+/* node network */
+var cv=document.getElementById('bg'),cx=cv.getContext('2d'),N=[],w,hh;
+function rs(){w=cv.width=innerWidth;hh=cv.height=innerHeight}rs();addEventListener('resize',rs);
+for(var k=0;k<38;k++)N.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25});
+var rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function tick(){cx.clearRect(0,0,w,hh);
+N.forEach(function(n){if(!rm){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>w)n.vx*=-1;if(n.y<0||n.y>hh)n.vy*=-1}});
+for(var a=0;a<N.length;a++){for(var b=a+1;b<N.length;b++){var dx=N[a].x-N[b].x,dy=N[a].y-N[b].y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<170){cx.strokeStyle='rgba(159,176,196,'+(0.35*(1-d/170))+')';cx.beginPath();cx.moveTo(N[a].x,N[a].y);cx.lineTo(N[b].x,N[b].y);cx.stroke()}}
+cx.fillStyle=a%5?'rgba(159,176,196,.8)':'rgba(227,173,99,.9)';cx.beginPath();cx.arc(N[a].x,N[a].y,a%5?2.2:3.4,0,6.3);cx.fill()}
+if(!rm)requestAnimationFrame(tick)}
+tick();
+})();
+</script>
+<script>(function(){
+var ss=[].slice.call(document.querySelectorAll('.s'));
+function clr(s){s.classList.remove('fo','fr');[].forEach.call(s.querySelectorAll('table'),function(t){t.cols=[]});[].forEach.call(s.querySelectorAll('.foc,.cf,.fc,.ct,.cb,.rl,.rr,.hf'),function(x){x.classList.remove('foc','cf','fc','ct','cb','rl','rr','hf')})}
+ss.forEach(function(s){[].forEach.call(s.querySelectorAll('.c'),function(c){var h=c.innerHTML.trim();
+if(/^<b>Watch out/i.test(h))c.classList.add('warn');else if(/^<b>Exam tip/i.test(h))c.classList.add('tip');
+else if(/^<code>[\s\S]*<\/code>$/.test(h)&&h.indexOf('<code>',1)<0)c.classList.add('fx');
+c.tabIndex=0;c.setAttribute('role','button');
+c.addEventListener('click',function(e){if(e.target.closest('button,input,a'))return;var on=c.classList.contains('foc');clr(s);if(!on){s.classList.add('fo');c.classList.add('foc')}});
+c.addEventListener('keydown',function(e){if(e.key==='Enter')c.click()})})});
+ss.forEach(function(s){[].forEach.call(s.querySelectorAll('table'),function(t){
+var rm=t.hasAttribute('data-rows');if(rm){t.classList.add('rm');[].forEach.call(t.tBodies[0].rows,function(r){r.tabIndex=0;r.addEventListener('keydown',function(e){if(e.key==='Enter'){e.stopPropagation();r.click()}})})}
+else[].forEach.call(t.querySelectorAll('thead th'),function(h){h.tabIndex=0;h.addEventListener('keydown',function(e){if(e.key==='Enter'){e.stopPropagation();h.click()}})});
+t.cols=[];t.addEventListener('click',function(e){var c=e.target.closest('td,th');if(!c||e.target.closest('button,input,a'))return;e.stopPropagation();if(rm&&c.parentNode.parentNode.tagName==='THEAD')return;var k=rm?c.parentNode.rowIndex:c.cellIndex,keep=t.classList.contains('fc'),cols=keep?t.cols.slice():[],j=cols.indexOf(k);clr(s);if(j>=0)cols.splice(j,1);else cols.push(k);t.cols=cols;if(!cols.length)return;s.classList.add('fo');t.classList.add('fc');var cd=t.closest('.c');if(cd)cd.classList.add('hf');var n=t.rows.length;
+if(rm){cols.forEach(function(k){var cs=t.rows[k].cells;[].forEach.call(cs,function(x){x.classList.add('cf')});cs[0].classList.add('rl');cs[cs.length-1].classList.add('rr')})}
+else cols.forEach(function(k){[].forEach.call(t.rows,function(r){if(r.cells[k])r.cells[k].classList.add('cf')});if(t.rows[0].cells[k])t.rows[0].cells[k].classList.add('ct');if(t.rows[n-1].cells[k])t.rows[n-1].cells[k].classList.add('cb')})});
+var hk=-1;function hc(){[].forEach.call(t.querySelectorAll('.hl'),function(x){x.classList.remove('hl')});hk=-1}
+if(!rm){t.addEventListener('mouseover',function(e){var c=e.target.closest('td,th');if(!c||c.cellIndex===hk)return;hc();hk=c.cellIndex;[].forEach.call(t.rows,function(r){if(r.cells[hk])r.cells[hk].classList.add('hl')})});t.addEventListener('mouseleave',hc)}})});
+new MutationObserver(function(){ss.forEach(function(s){if(!s.classList.contains('on')&&s.classList.contains('fo'))clr(s)})}).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+})();</script>
+<script>(function(){
+var Q=[
+["Which is equivalent to ~(p∧q)?",["~p∧~q","~p∨~q","~p∨q","p∨~q"],1,"De Morgan: negating an AND flips it to OR and negates each part."],
+["The negation of “If Sara studies, she passes” is…",["If Sara does not study, she fails","Sara studies and she does not pass","Sara does not study and she passes","If Sara passes, she studies"],1,"~(p→q) ≡ p∧~q. The negation of an if-then is an AND."],
+["What is the contrapositive of “If it rains, the match is cancelled”?",["If the match is cancelled, it rains","If it does not rain, the match is not cancelled","If the match is not cancelled, it does not rain","It rains and the match is not cancelled"],2,"Contrapositive of p→q is ~q→~p. It is always equivalent to the original."],
+["“p only if q” means…",["q→p","p→q","p↔q","~p→q"],1,"“Only if” gives p→q. It does NOT mean q→p."],
+["Which argument form is invalid?",["p→q; p ∴ q","p→q; ~q ∴ ~p","p→q; q→r ∴ p→r","p→q; q ∴ p"],3,"That is the converse error. Row p=F, q=T has true premises and a false conclusion."],
+["The negation of “Every student passed the quiz” is…",["No student passed the quiz","Every student failed the quiz","At least one student did not pass","At least one student passed"],2,"Flip the quantifier, then negate the predicate: ~∀ ≡ ∃~."],
+["Is ∀x∈ℝ, x² > 0 true or false?",["True, squares are positive","True, only for x > 0","False, counterexample x = 0","False, counterexample x = −1"],2,"One counterexample is enough for ∀. At x = 0, x² = 0, which is not greater than 0."],
+["Which is a counterexample to “if n is even then n² + 1 is prime”?",["n = 2","n = 3","n = 8","n = 0"],2,"n = 8 is even, but 8² + 1 = 65 = 5·13 is not prime. (n = 2 gives 5, which is prime.)"],
+["In a direct proof that m and n are even, why write m = 2r and n = 2s, not both 2r?",["It looks neater","Both 2r would force m = n","r and s must be prime","2s is smaller"],1,"m and n are any even integers, so they may differ. Use a new letter for each unknown."],
+["Which statement is true?",["{2} ∈ {1, 2, 3}","{2} ⊆ {1, 2, 3}","2 ⊆ {1, 2, 3}","{1, 2, 3} ∈ {2}"],1,"{2} is a subset of {1, 2, 3} because its only element, 2, is in the larger set. But {2} is not one of the elements 1, 2, 3."],
+["If A = {x, y} and B = {1, 2, 3}, how many elements does A × B have?",["5","6","3","2"],1,"|A × B| = |A| · |B| = 2 · 3 = 6 ordered pairs."],
+["Which is a correct negation of “All mathematicians wear glasses”?",["No mathematician wears glasses","Some mathematician does not wear glasses","All mathematicians do not wear glasses","Some mathematician wears glasses"],1,"~∀ ≡ ∃~. One mathematician without glasses makes the original false. “No mathematician…” is stronger than needed."],
+["What is the negation of “For every x, if P(x) then Q(x)”?",["For every x, P(x) and not Q(x)","There is an x with P(x) and not Q(x)","There is an x with not P(x) and Q(x)","For every x, if not P(x) then not Q(x)"],1,"~(P → Q) ≡ P ∧ ~Q, and ∀ flips to ∃."],
+["In a proof, “m = 2k + 1 and n = 2k + 1” is a mistake because…",["k must be even","it forces m = n","2k + 1 is not odd","it skips the definition"],1,"Reusing k makes m and n equal, so the proof only covers equal integers. Use a new letter for each unknown."],
+["Which word is correct: “By definition of odd, m = 2a + 1 for ___ integer a.”",["any","every","some","all"],2,"a is one specific integer, namely (m − 1)/2. “Some integer a” is correct."]
+],m=document.getElementById('mcq'),k=0,sc=0;
+if(!m)return;
+function show(){
+if(k>=Q.length){m.innerHTML='<div class="qt">Score: '+sc+' / '+Q.length+'</div><p class="ex">'+(sc>=Q.length-1?'Excellent. You are exam ready.':sc>=7?'Good. Revisit the questions you missed.':'Go back over the topics you missed, then try again.')+'</p><button class="btn" id="mr">Try again</button>';document.getElementById('mr').onclick=function(){k=0;sc=0;show()};return}
+var q=Q[k];
+m.innerHTML='<div class="qn">Question '+(k+1)+' / '+Q.length+'</div><div class="qt">'+q[0]+'</div>'+q[1].map(function(o,j){return'<button class="mo" data-j="'+j+'">'+'ABCD'.charAt(j)+'. '+o+'</button>'}).join('')+'<div id="mx"></div>';
+[].forEach.call(m.querySelectorAll('.mo'),function(b){b.onclick=function(){var j=+b.dataset.j;
+[].forEach.call(m.querySelectorAll('.mo'),function(x,i){x.disabled=true;if(i===q[2])x.classList.add('ok')});
+if(j===q[2])sc++;else b.classList.add('no');
+document.getElementById('mx').innerHTML='<p class="ex"><b>'+(j===q[2]?'Correct. ':'Not quite. ')+'</b>'+q[3]+'</p><button class="btn" id="mn">'+(k===Q.length-1?'See score':'Next question')+'</button>';
+document.getElementById('mn').onclick=function(){k++;show()}}})}
+show()})();</script>
+<script>(function(){
+var cx=document.getElementById('cx');if(!cx)return;
+var sl=cx.closest('.s'),t=sl.querySelector('table');
+var E={'p':'<b>p</b> is the first statement. Its values run T, T, F, F.',
+'q':'<b>q</b> is the second statement. Its values run T, F, T, F, so p and q together cover all 4 cases (2² rows).',
+'p∧q':'<b>AND (p∧q)</b> is true only when both p and q are true. One false makes it false.',
+'p∨q':'<b>Inclusive OR (p∨q)</b> is true when at least one is true, including both. It is false only when both are false.',
+'p⊕q':'<b>Exclusive OR (p⊕q)</b> is true when exactly one is true, so it is false when both are true. It is true when they differ.<div class="m">p⊕q ≡ (p∨q)∧~(p∧q)</div>',
+'p→q':'<b>Conditional (p→q)</b> is false only when p is true and q is false. If p is false, the statement is true.',
+'p↔q':'<b>Biconditional (p↔q)</b> is true when p and q match (both T or both F). It is the opposite of XOR.',
+'p↑q':'<b>NAND (p↑q) = ~(p∧q)</b> is false only when both are true.',
+'p↓q':'<b>NOR (p↓q) = ~(p∨q)</b> is true only when both are false.'};
+function r(){var c=(t.cols||[]).slice().sort(function(a,b){return a-b});
+cx.innerHTML=c.map(function(k){var h=t.rows[0].cells[k].textContent.trim();return E[h]?'<div class="ex2">'+E[h]+'</div>':''}).join('')}
+t.addEventListener('click',r);
+new MutationObserver(function(){if(!sl.classList.contains('on'))cx.innerHTML=''}).observe(sl,{attributes:true,attributeFilter:['class']});
+})();</script>
+<script>(function(){
+var MQ=matchMedia('(max-width:760px)'),S=[].slice.call(document.querySelectorAll('.s')),dl=document.getElementById('dlist'),dlab=document.getElementById('dlab'),bar=document.getElementById('bar'),cur=-1;
+S[0].classList.add('hero');
+var seen={};S.forEach(function(s){var t=s.dataset.t;if(t==='Intro'||seen[t])return;seen[t]=1;var b=dl.querySelector('[data-v="'+t+'"]');var d=document.createElement('div');d.className='tb';d.textContent=b?b.textContent:t;s.parentNode.insertBefore(d,s);s.insertAdjacentHTML('afterbegin','<div class="tl a">'+(b?b.textContent.replace(/^[\d.]+\s*/,''):t)+'</div>')});
+function sc(){return;var y=innerHeight*.35,k=0;for(var q=0;q<S.length;q++){if(S[q].getBoundingClientRect().top<=y)k=q}
+var t=S[k].dataset.t;if(k!==cur){cur=k;dlab.textContent=t;[].forEach.call(dl.children,function(b){b.classList.toggle('on',b.dataset.v===t)})}
+var h=document.documentElement.scrollHeight-innerHeight;bar.style.width=(h>0?Math.min(100,scrollY/h*100):0)+'%'}
+addEventListener('scroll',sc,{passive:true});addEventListener('resize',sc);sc();
+window.__ini=true;
+})();</script>
+</body>
+</html>
